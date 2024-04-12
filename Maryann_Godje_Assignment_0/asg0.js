@@ -1,21 +1,21 @@
 // DrawRectangle.js
 function main() {
     // Retrieve <canvas> element <- (1)
-    var canvas = document.getElementById('canvas1');
+    canvas = document.getElementById('canvas1');
     if (!canvas) {
         console.log('Failed to retrieve the <canvas> element');
         return false;
     }
 
     // Get the rendering context for 2DCG <- (2)
-    var ctx = canvas.getContext('2d');
+    ctx = canvas.getContext('2d');
 
     // Draw a blue rectangle <- (3)
     ctx.fillStyle = 'rgba(0, 0, 0, 1.0)'; // Set a black color
     ctx.fillRect(0, 0, canvas.width, canvas.height); // Fill a rectangle with the color
 
-    //let v1 = (2.25, 2.25);
-    //drawVector(v1, "red");
+    let v1 = new Vector3([2.25,2.25,0]);
+    drawVector(v1, "red");
 
 /*
 // Retrieve <canvas> element
@@ -40,8 +40,8 @@ function drawVector(v, color) {
     var x = canvas.width/2;
     var y = canvas.height/2;
     ctx.beginPath();
-    ctx.moveTo(cx,cy);
-    ctx.lineTo(cx+v.elements[0]*20, cy-v.elements[1]*20,v.elements[2]*20);
+    ctx.moveTo(x, y);
+    ctx.lineTo(x+v.elements[0]*20, y-v.elements[1]*20,v.elements[2]*20);
     ctx.stroke();
 }
 
