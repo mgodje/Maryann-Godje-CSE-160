@@ -43,7 +43,7 @@ class Vector3 {
       * Add other to this vector.
       * @return this
       */
-    add(other) {
+    add(other) { 
         // Insert your code here.
         // This function should change this vector (this.elements) and not create a new vector.
 
