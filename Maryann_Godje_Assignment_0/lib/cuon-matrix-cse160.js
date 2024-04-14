@@ -47,6 +47,7 @@ class Vector3 {
         // Insert your code here.
         // This function should change this vector (this.elements) and not create a new vector.
         for (let a = 0; a < 3; ++a) {
+          // add this elements and other elements, then put into this
           this.elements[a] += other.elements[a];
         }
         // Don't delete the return statement.
@@ -61,6 +62,7 @@ class Vector3 {
         // Insert your code here.
         // This function should change this vector (this.elements) and not create a new vector.
         for (let s = 0; s < 3; ++s) {
+          // subtract this elements from other elements and put into this
           this.elements[s] -= other.elements[s];
         }
         // Don't delete the return statement.
@@ -75,6 +77,7 @@ class Vector3 {
         // Insert your code here.
         // This function should change this vector (this.elements) and not create a new vector.
         for (let d = 0; d < 3; ++d) {
+          // divide scalar
           this.elements[d] /= scalar;
         }
         // Don't delete the return statement.
@@ -89,6 +92,7 @@ class Vector3 {
         // Insert your code here.
         // This function should change this vector (this.elements) and not create a new vector.
         for (let m = 0; m < 3; ++m) {
+          // multiply scalar
           this.elements[m] *= scalar;
         }
         // Don't delete the return statement.
@@ -103,6 +107,7 @@ class Vector3 {
         // Insert your code here.
         let d = 0; // Modify this line to calculate this vector's magnitude.
 
+        // eq. from textbook: x1*x2 + y1*y2 + z1*z2
         for (let i = 0; i < 3; ++i) {
           d += other1.elements[i] * other2.elements[i];
         }
@@ -135,6 +140,7 @@ class Vector3 {
       */
     magnitude() {
         // Insert your code here.
+
         // for sqrt function in JavaScript, I searched:
         // https://www.programiz.com/javascript/examples/square-root#:~:text=To%20find%20the%20square%20root%20of%20a%20number%20in%20JavaScript,sqrt()%20method
         // for pow function in JavaScript, I searched:
@@ -142,8 +148,10 @@ class Vector3 {
         let m = 0; // Modify this line to calculate this vector's magnitude.
 
         for (let i = 0; i < 3; ++i) {
+          // inside square root (a^2 + b^2 + c^)
           m += Math.pow(this.elements[i], 2);
         }
+        // square root m
         m = Math.sqrt(m);
         // Don't delete the return statement.
         return m;
@@ -157,6 +165,7 @@ class Vector3 {
         // Insert your code here.
         // This function should change this vector (this.elements) and not create a new vector.
         for (let i = 0; i < 3; ++i) {
+          // divide vector by its magnitude
           this.elements[i] /= this.magnitude();
         }
         // Don't delete the return statement.
