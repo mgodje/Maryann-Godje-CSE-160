@@ -46,7 +46,9 @@ class Vector3 {
     add(other) { 
         // Insert your code here.
         // This function should change this vector (this.elements) and not create a new vector.
-
+        for (let a = 0; a < 3; ++a) {
+          this.elements[a] += other.elements[a];
+        }
         // Don't delete the return statement.
         return this;
     };
@@ -58,7 +60,9 @@ class Vector3 {
     sub(other) {
         // Insert your code here.
         // This function should change this vector (this.elements) and not create a new vector.
-
+        for (let s = 0; s < 3; ++s) {
+          this.elements[s] -= other.elements[s];
+        }
         // Don't delete the return statement.
         return this;
     };
@@ -70,7 +74,9 @@ class Vector3 {
     div(scalar) {
         // Insert your code here.
         // This function should change this vector (this.elements) and not create a new vector.
-
+        for (let d = 0; d < 3; ++d) {
+          this.elements[d] /= scalar;
+        }
         // Don't delete the return statement.
         return this;
     };
@@ -82,7 +88,9 @@ class Vector3 {
     mul(scalar) {
         // Insert your code here.
         // This function should change this vector (this.elements) and not create a new vector.
-
+        for (let m = 0; m < 3; ++m) {
+          this.elements[m] *= scalar;
+        }
         // Don't delete the return statement.
         return this;
     };
@@ -94,6 +102,10 @@ class Vector3 {
     static dot(other1, other2) {
         // Insert your code here.
         let d = 0; // Modify this line to calculate this vector's magnitude.
+
+        for (let i = 0; i < 3; ++i) {
+          d += other1.elements[i] * other2.elements[i];
+        }
 
         // Don't delete the return statement.
         return d;
@@ -108,6 +120,11 @@ class Vector3 {
         // This function should create and return a new vector.
         let v3 = new Vector3(); // Modify this line to calculate cross product between other1 and other2.
 
+        // eq. from textbook: a x b = ((ya*2b - za*yb), (za*xb - xa*zb), (xa*yb - ya*xb))
+        v3[0] = (other1.elements[1] * other2.elements[2]) - (other1.elements[2] * other2.elements[1]);
+        v3[1] = (other1.elements[2] * other2.elements[0]) - (other1.elements[0] * other2.elements[2]);
+        v3[2] = (other1.elements[0] * other2.elements[1]) - (other1.elements[1] * other2.elements[0]);
+
         // Don't delete the return statement.
         return v3;
     }
@@ -118,8 +135,16 @@ class Vector3 {
       */
     magnitude() {
         // Insert your code here.
+        // for sqrt function in JavaScript, I searched:
+        // https://www.programiz.com/javascript/examples/square-root#:~:text=To%20find%20the%20square%20root%20of%20a%20number%20in%20JavaScript,sqrt()%20method
+        // for pow function in JavaScript, I searched:
+        // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/pow
         let m = 0; // Modify this line to calculate this vector's magnitude.
 
+        for (let i = 0; i < 3; ++i) {
+          m += Math.pow(this.elements[i], 2);
+        }
+        m = Math.sqrt(m);
         // Don't delete the return statement.
         return m;
     };
@@ -131,7 +156,9 @@ class Vector3 {
     normalize() {
         // Insert your code here.
         // This function should change this vector (this.elements) and not create a new vector.
-
+        for (let i = 0; i < 3; ++i) {
+          this.elements[i] /= this.magnitude();
+        }
         // Don't delete the return statement.
         return this;
     };
