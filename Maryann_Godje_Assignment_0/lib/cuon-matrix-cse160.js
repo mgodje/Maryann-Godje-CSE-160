@@ -125,10 +125,13 @@ class Vector3 {
         // This function should create and return a new vector.
         let v3 = new Vector3(); // Modify this line to calculate cross product between other1 and other2.
 
+        // Tutor Jacob Leenerts helped with v3[1] (multiplpy by -1 and switch)
+        // also helped with explaining Vector3 class holds elements arrays, so accessing v3[1] wouldn't work on its own.
+
         // eq. from textbook: a x b = ((ya*2b - za*yb), (za*xb - xa*zb), (xa*yb - ya*xb))
-        v3[0] = (other1.elements[1] * other2.elements[2]) - (other1.elements[2] * other2.elements[1]);
-        v3[1] = (other1.elements[2] * other2.elements[0]) - (other1.elements[0] * other2.elements[2]);
-        v3[2] = (other1.elements[0] * other2.elements[1]) - (other1.elements[1] * other2.elements[0]);
+        v3.elements[0] = (other1.elements[1] * other2.elements[2]) - (other1.elements[2] * other2.elements[1]);
+        v3.elements[1] = -1 * ((other1.elements[0] * other2.elements[2]) - (other1.elements[2] * other2.elements[0]));
+        v3.elements[2] = (other1.elements[0] * other2.elements[1]) - (other1.elements[1] * other2.elements[0]);
 
         // Don't delete the return statement.
         return v3;
