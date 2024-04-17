@@ -16,6 +16,11 @@ var FSHADER_SOURCE = `
     gl_FragColor = u_FragColor;
   }`
 
+// constant vars
+const POINT = 0;
+const TRIANGLE = 1;
+const CIRCLE = 2;
+
 // Global vars
 let gl;
 let canvas;
@@ -24,6 +29,7 @@ let u_FragColor;
 let u_Size;
 let g_selected_color = [1.0, 1.0, 1.0, 1.0];
 let g_selected_size = 2;
+let g_selected_type = POINT;
 
 var g_Point_list = [];
 
@@ -31,8 +37,14 @@ function setting_up_WebGL() {
   // Retrieve <canvas> element
   canvas = document.getElementById('webgl');
 
+  // OLD CODE 
+  // gl = getWebGLContext(canvas);
+
   // Get the rendering context for WebGL
-  gl = getWebGLContext(canvas);
+  gl = canvas.getContext("webgl", {
+    preserveDrawingBuffer: true
+  });
+ 
   if (!gl) {
     console.log('Failed to get the rendering context for WebGL');
     return;
@@ -77,13 +89,33 @@ function html_actions() {
     g_selected_color = [1.0, 0.0, 0.0, 1.0];
   };
 
+  document.getElementById('Point').onclick = function() {
+    g_selected_type = POINT;
+  };
+
+  document.getElementById('Triangle').onclick = function() {
+    g_selected_type = TRIANGLE;
+  };
+
+  document.getElementById('Circle').onclick = function() {
+    g_selected_type = CIRCLE;
+  };
+
+  document.getElementById('Clear').onclick = function() {
+    g_Point_list = [];
+    render_shapes();
+  };
+
+
   // color sliders
   document.getElementById('RedSlider').addEventListener('mouseup', function() {
     g_selected_color[0] = this.value / 100;
   });
+
   document.getElementById('GreenSlider').addEventListener('mouseup', function() {
     g_selected_color[1] = this.value / 100;
   }); 
+
   document.getElementById('BlueSlider').addEventListener('mouseup', function() {
     g_selected_color[2] = this.value / 100;
   });
@@ -103,6 +135,11 @@ function main() {
 
   // Register function (event handler) to be called on a mouse press
   canvas.onmousedown = click;
+  canvas.onmousemove = function(ev) { 
+    if (ev.buttons == 1) {
+      click(ev);
+    }
+   };
 
   // Specify the color for clearing <canvas>
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
@@ -123,6 +160,8 @@ function xy_coordinate_covert_to_GL(ev) {
 }
 
 function render_shapes() {
+  var start_time = performance.now();
+  
   // Clear <canvas>
   gl.clear(gl.COLOR_BUFFER_BIT);
 
@@ -131,8 +170,20 @@ function render_shapes() {
 
   var len = g_Point_list.length;
   for(var i = 0; i < len; i++) {
-    g_Point_list.render();
+    g_Point_list[i].render();
   }
+
+  var duration = performance.now() - start_time;
+  duration_performance("numdot: " + len + "; ms: " + Math.floor(duration) + "; fps: " + Math.floor(10000 / duration) / 10, "numdot");
+}
+
+function duration_performance(text, htmlID) {
+  var html_element = document.getElementById(htmlID);
+  if (!html_element) {
+    console.log("Failed to get " + htmlID + " from HTML");
+    return;
+  }
+  html_element.innerHTML = text;
 }
 
 function click(ev) {
@@ -140,7 +191,17 @@ function click(ev) {
   let [x, y] = xy_coordinate_covert_to_GL(ev);
 
   // create new point
-  let point = new Point();
+  let point;
+  if (g_selected_type == POINT) {
+    point = new Point();
+  }
+  else if (g_selected_type == TRIANGLE) {
+    point = new Triangle();
+  }
+  else {
+    point = new Circle();
+  }
+
   point.position = [x, y];
   point.color = g_selected_color.slice();
   point.size = g_selected_size;
