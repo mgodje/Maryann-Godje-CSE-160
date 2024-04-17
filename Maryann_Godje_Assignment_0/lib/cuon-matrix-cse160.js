@@ -167,6 +167,8 @@ class Vector3 {
     normalize() {
         // Insert your code here.
         // This function should change this vector (this.elements) and not create a new vector.
+        // v / ||v||
+        // let mag = Math.sqrt(this.magnitude());
         for (let i = 0; i < 3; ++i) {
           // divide vector by its magnitude
           this.elements[i] /= this.magnitude();
