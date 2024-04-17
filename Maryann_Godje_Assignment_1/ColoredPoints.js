@@ -23,10 +23,9 @@ let a_Position;
 let u_FragColor;
 let u_Size;
 let g_selected_color = [1.0, 1.0, 1.0, 1.0];
-let g_selected_size = 1;
-var g_colors = [];
-var g_points = [];
-var g_sizes = [];
+let g_selected_size = 2;
+
+var g_Point_list = [];
 
 function setting_up_WebGL() {
   // Retrieve <canvas> element
@@ -47,7 +46,7 @@ function connect_vars_to_GLSL() {
       return;
     }
   
-    // // Get the storage location of a_Position
+    // Get the storage location of a_Position
     a_Position = gl.getAttribLocation(gl.program, 'a_Position');
     if (a_Position < 0) {
       console.log('Failed to get the storage location of a_Position');
@@ -58,6 +57,13 @@ function connect_vars_to_GLSL() {
     u_FragColor = gl.getUniformLocation(gl.program, 'u_FragColor');
     if (!u_FragColor) {
       console.log('Failed to get the storage location of u_FragColor');
+      return;
+    }
+
+    // Get the storage location of u_Size
+    u_Size = gl.getUniformLocation(gl.program, 'u_Size');
+    if (!u_Size) {
+      console.log('Failed to get the storage location of u_Size');
       return;
     }
 }
@@ -120,17 +126,12 @@ function render_shapes() {
   // Clear <canvas>
   gl.clear(gl.COLOR_BUFFER_BIT);
 
-  var len = g_points.length;
-  for(var i = 0; i < len; i++) {
-    var xy = g_points[i];
-    var rgba = g_colors[i];
+  // OLD CODE
+  // var len = g_points.length;
 
-    // Pass the position of a point to a_Position variable
-    gl.vertexAttrib3f(a_Position, xy[0], xy[1], 0.0);
-    // Pass the color of a point to u_FragColor variable
-    gl.uniform4f(u_FragColor, rgba[0], rgba[1], rgba[2], rgba[3]);
-    // Draw
-    gl.drawArrays(gl.POINTS, 0, 1);
+  var len = g_Point_list.length;
+  for(var i = 0; i < len; i++) {
+    g_Point_list.render();
   }
 }
 
@@ -138,6 +139,17 @@ function click(ev) {
  
   let [x, y] = xy_coordinate_covert_to_GL(ev);
 
+  // create new point
+  let point = new Point();
+  point.position = [x, y];
+  point.color = g_selected_color.slice();
+  point.size = g_selected_size;
+  // store new point
+  g_Point_list.push(point);
+
+  render_shapes();
+
+  /* OLD CODE
   // Store the coordinates to g_points array
   g_points.push([x, y]);
   
@@ -145,9 +157,9 @@ function click(ev) {
   g_colors.push(g_selected_color.slice());
 
   // Store sizes
-  g_sizes.push(g_selected_size.slice());
+  g_sizes.push(g_selected_size);*/
   
-  /*
+  /* OLD CODE
   if (x >= 0.0 && y >= 0.0) {      // First quadrant
     g_colors.push([1.0, 0.0, 0.0, 1.0]);  // Red
   } else if (x < 0.0 && y < 0.0) { // Third quadrant
@@ -155,6 +167,4 @@ function click(ev) {
   } else {                         // Others
     g_colors.push([1.0, 1.0, 1.0, 1.0]);  // White
   }*/
-
-  render_shapes();
 }
