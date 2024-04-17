@@ -28,8 +28,9 @@ let a_Position;
 let u_FragColor;
 let u_Size;
 let g_selected_color = [1.0, 1.0, 1.0, 1.0];
-let g_selected_size = 2;
+let g_selected_size = 2.0;
 let g_selected_type = POINT;
+let g_selected_segments = 10;
 
 var g_Point_list = [];
 
@@ -81,7 +82,7 @@ function connect_vars_to_GLSL() {
 }
 
 function html_actions() {
-  // buttons
+  // color buttons
   document.getElementById('Green').onclick = function() {
     g_selected_color = [0.0, 1.0, 0.0, 1.0];
   };
@@ -89,6 +90,7 @@ function html_actions() {
     g_selected_color = [1.0, 0.0, 0.0, 1.0];
   };
 
+  // shape buttons
   document.getElementById('Point').onclick = function() {
     g_selected_type = POINT;
   };
@@ -101,6 +103,7 @@ function html_actions() {
     g_selected_type = CIRCLE;
   };
 
+  // clear button
   document.getElementById('Clear').onclick = function() {
     g_Point_list = [];
     render_shapes();
@@ -124,6 +127,11 @@ function html_actions() {
   document.getElementById('SizeSlider').addEventListener('mouseup', function() {
     g_selected_size = this.value;
   }); 
+
+  // segments slider
+  document.getElementById('CircleSlider').addEventListener('mouseup', function() {
+    g_selected_segments = this.value;
+  });
 }
 
 function main() {

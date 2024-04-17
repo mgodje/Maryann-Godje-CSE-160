@@ -4,25 +4,21 @@ class Circle {
       this.position = [0.0, 0.0, 0.0];
       this.color = [1.0, 1.0, 1.0, 1.0];
       this.size = 2.0;
-      this.segments = 50.0;
+      this.segments = 10;
     }
   
     render() {
-      // OLD CODE
-      /*var xy = g_points[i];
-      var rgba = g_colors[i];
-      var size = g_sizes[i];*/
-  
       var xy = this.position;
       var rgba = this.color;
       var size = this.size;
+      var segments = this.segments;
 
       // Pass the color of a point to u_FragColor variable
       gl.uniform4f(u_FragColor, rgba[0], rgba[1], rgba[2], rgba[3]);
       
-      var delta = this.size / 200.0;
+      var delta = size / 200.0;
+      let angle_move = 360 / segments;
 
-      let angle_move = 360 / this.segments;
       for (var angle = 0; angle < 360; angle += angle_move) {
         let center = [xy[0], xy[1]];
         let angle_1 = angle;
@@ -35,4 +31,4 @@ class Circle {
         draw_triangle([xy[0], xy[1], pt1[0], pt1[1], pt2[0], pt2[1]]);
       }
     }
-  }  
+}  
