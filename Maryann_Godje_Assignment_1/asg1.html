@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Change a point color</title>
+    <title>CSE 160 - Assignment 1</title>
   </head>
 
   <body onload="main()">
@@ -13,14 +13,14 @@
 
     <button type="button" id="Green">Green</button>
     <button type="button" id="Red">Red</button>
-
+    <button type="button" id="Blue">Blue</button>
+    <button type="button" id="Grey">Grey</button>
+    <button type="button" id="Yellow">Yellow</button>
+    
     <br><br>
-    <button type="button" id="Point">Point</button>
+    <button type="button" id="Point">Square</button>
     <button type="button" id="Triangle">Triangle</button>
     <button type="button" id="Circle">Circle</button>
-
-    <br><br>
-    <button type="button" id="Clear">Clear</button>
 
     <br><br>
     Red <input type="range" min="0" max="100" value="100" class="slider" id="RedSlider">
@@ -32,6 +32,9 @@
     Size <input type="range" min="2" max="50" value="2" class="slider" id="SizeSlider">
     <br><br>
     Circle Segments <input type="range" min="10" max="60" value="10" class="slider" id="CircleSlider">
+
+    <br><br>
+    <button type="button" id="Clear">Clear</button>
 
     <script src="lib/webgl-utils.js"></script>
     <script src="lib/webgl-debug.js"></script>

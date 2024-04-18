@@ -89,6 +89,15 @@ function html_actions() {
   document.getElementById('Red').onclick = function() {
     g_selected_color = [1.0, 0.0, 0.0, 1.0];
   };
+  document.getElementById('Blue').onclick = function() {
+    g_selected_color = [0.0, 0.0, 1.0, 1.0];
+  };
+  document.getElementById('Grey').onclick = function() {
+    g_selected_color = [0.5, 0.5, 0.5, 1.0];
+  };
+  document.getElementById('Yellow').onclick = function() {
+    g_selected_color = [1.0, 1.0, 0.0, 1.0];
+  };
 
   // shape buttons
   document.getElementById('Point').onclick = function() {
