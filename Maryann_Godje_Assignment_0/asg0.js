@@ -129,8 +129,5 @@ function angleBetween(v1, v2) {
 
 function areaTriangle(v1, v2) {
   let cross = Vector3.cross(v1, v2);
-  let v = new Vector3(cross[0], cross[1], cross[2]);
-  // having issues here
-  let final = v.magnitude() / 2;
-  return final;
+  return cross.magnitude() / 2;
 }

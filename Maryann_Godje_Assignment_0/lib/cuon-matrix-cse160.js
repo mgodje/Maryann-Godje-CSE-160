@@ -149,7 +149,7 @@ class Vector3 {
         // for pow function in JavaScript, I searched:
         // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/pow
         let m = 0; // Modify this line to calculate this vector's magnitude.
-
+        
         for (let i = 0; i < 3; ++i) {
           // inside square root (a^2 + b^2 + c^)
           m += Math.pow(this.elements[i], 2);
@@ -168,10 +168,10 @@ class Vector3 {
         // Insert your code here.
         // This function should change this vector (this.elements) and not create a new vector.
         // v / ||v||
-        // let mag = Math.sqrt(this.magnitude());
+        let mag = this.magnitude();
         for (let i = 0; i < 3; ++i) {
           // divide vector by its magnitude
-          this.elements[i] /= this.magnitude();
+          this.elements[i] /= mag;
         }
         // Don't delete the return statement.
         return this;
