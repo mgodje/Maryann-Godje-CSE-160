@@ -1,3 +1,13 @@
+<!-- Got help from:
+  1) Tutor: Rohan Venkatapuram on 04/17/2024
+    - links provided:
+      -  https://www.geogebra.org/calculator
+      - https://people.ucsc.edu/~rnvenkat/asgn1/asgn1.html
+  2) https://www.geeksforgeeks.org/html-font-tag/
+  3) https://blog.hubspot.com/website/insert-image-in-html#:~:text=To%20insert%20an%20image%20in%20HTML%2C%20use%20the%20image%20tag,section%20of%20your%20HTML%20file.&text=The%20HTML%20image%20element%20is,not%20have%20a%20closing%20tag.
+  4) https://www.today.com/pets/just-because-11-pictures-chicks-hats-984489
+-->
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -6,35 +16,83 @@
   </head>
 
   <body onload="main()">
+    <!-- How to increase font size: https://www.geeksforgeeks.org/html-font-tag/ -->
+    <font size="+2">Hey! Welcome to this Canvas!</font>
+    <br><br>
     <canvas id="webgl" width="400" height="400">
     </canvas>
 
-    <p id="numdot">Performance here! Need an HTML ID, though...</p>
-
+    <p id="numdot">Performance will run here...</p>
+    
+    <font size="+1">Primary Colors:</font>
+    <br><br>
     <button type="button" id="Green">Green</button>
     <button type="button" id="Red">Red</button>
     <button type="button" id="Blue">Blue</button>
-    <button type="button" id="Grey">Grey</button>
-    <button type="button" id="Yellow">Yellow</button>
-    
-    <br><br>
-    <button type="button" id="Point">Square</button>
-    <button type="button" id="Triangle">Triangle</button>
-    <button type="button" id="Circle">Circle</button>
 
+    <br><br>
+    <font size="+1">Extra Colors:</font>
+    <br><br>
+    <button type="button" id="Yellow">Yellow</button>
+    <button type="button" id="Pink">Pink</button>
+    <button type="button" id="Purple">Purple</button>
+    <button type="button" id="Orange">Orange</button>
+
+    <br><br>
+    <font size="+1">Neutrals:</font>
+    <br><br>
+    <button type="button" id="Grey">Grey</button>
+    <button type="button" id="White">White</button>
+
+    <br><br>
+    <font size="+1">RGB Factors:</font>
     <br><br>
     Red <input type="range" min="0" max="100" value="100" class="slider" id="RedSlider">
     <br><br>
     Green <input type="range" min="0" max="100" value="100" class="slider" id="GreenSlider">
     <br><br>
     Blue <input type="range" min="0" max="100" value="100" class="slider" id="BlueSlider">
+    
+    <br><br>
+    <font size="+1">Shapes:</font>
+    <br><br>
+    <button type="button" id="Point">Square</button>
+    <button type="button" id="Triangle">Triangle</button>
+    <button type="button" id="Circle">Circle</button>
+
+    <br><br>
+    <font size="+1">Adjust Shape Sizing or Circle Edges:</font>
     <br><br>
     Size <input type="range" min="2" max="50" value="2" class="slider" id="SizeSlider">
     <br><br>
     Circle Segments <input type="range" min="10" max="60" value="10" class="slider" id="CircleSlider">
 
     <br><br>
+    <font size="+1">Clear Canvas:</font>
+    <br><br>
     <button type="button" id="Clear">Clear</button>
+
+    <br><br>
+    <font size="+2">Chicken Time!</font>
+    <br><br>
+    <font size="+1">Now, here's a chicken drawing:</font>
+    <br><br>
+    <!-- How to add an image: https://blog.hubspot.com/website/insert-image-in-html#:~:text=To%20insert%20an%20image%20in%20HTML%2C%20use%20the%20image%20tag,section%20of%20your%20HTML%20file.&text=The%20HTML%20image%20element%20is,not%20have%20a%20closing%20tag. -->
+    <img src="drawing_chicken.jpg" width="400px">
+    <br><br>
+    <font size="+1">And here's that chicken plotted in geogebra just to show I was on my way to WebGL this lad. Oh, and here is </font>
+    <a href="https://www.geogebra.org/calculator">geogebra website linked!</a>
+    <br><br>
+    <img src="geogebra_chicken.png" width="400px">
+    <br><br>
+    <font size="+1">Unfortunately, I ran out of time to WebGL this chicken. However, please know that it would have been amazing! </font>
+    <br><br>
+    <font size="+1">So, instead, I have for you what inspired me to try and create such a masterpiece:</font>
+    <br><br>
+     <!-- chicken image came from: https://www.today.com/pets/just-because-11-pictures-chicks-hats-984489 -->
+    <img src="chick_hat.jpg" width="400px">
+    <br><br>
+    <font size="-1">Yes, I decided to add pants to my own design. Don't know why...</font>
 
     <script src="lib/webgl-utils.js"></script>
     <script src="lib/webgl-debug.js"></script>
@@ -42,6 +100,6 @@
     <script src="HelloTriangle.js"></script>
     <script src="Circle.js"></script>
     <script src="Point.js"></script>
-    <script src="ColoredPoints.js"></script>
+    <script src="asg1.js"></script>
   </body>
 </html>

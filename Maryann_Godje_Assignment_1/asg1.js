@@ -92,11 +92,23 @@ function html_actions() {
   document.getElementById('Blue').onclick = function() {
     g_selected_color = [0.0, 0.0, 1.0, 1.0];
   };
+  document.getElementById('Yellow').onclick = function() {
+    g_selected_color = [1.0, 1.0, 0.0, 1.0];
+  };
+  document.getElementById('Pink').onclick = function() {
+    g_selected_color = [1.0, 0.0, 0.5, 1.0];
+  };
+  document.getElementById('Purple').onclick = function() {
+    g_selected_color = [0.5, 0.0, 0.5, 1.0];
+  };
+  document.getElementById('Orange').onclick = function() {
+    g_selected_color = [1.0, 0.5, 0.0, 1.0];
+  };
   document.getElementById('Grey').onclick = function() {
     g_selected_color = [0.5, 0.5, 0.5, 1.0];
   };
-  document.getElementById('Yellow').onclick = function() {
-    g_selected_color = [1.0, 1.0, 0.0, 1.0];
+  document.getElementById('White').onclick = function() {
+    g_selected_color = [1.0, 1.0, 1.0, 1.0];
   };
 
   // shape buttons
@@ -246,4 +258,29 @@ function click(ev) {
   } else {                         // Others
     g_colors.push([1.0, 1.0, 1.0, 1.0]);  // White
   }*/
+}
+
+function draw() {
+
+  
+  // create new point
+  let point;
+  if (g_selected_type == POINT) {
+    point = new Point();
+  }
+  else if (g_selected_type == TRIANGLE) {
+    point = new Triangle();
+  }
+  else {
+    point = new Circle();
+  }
+
+  point.position = [x, y];
+  point.color = g_selected_color.slice();
+  point.size = g_selected_size;
+  point.segments = g_selected_segments;
+  // store new point
+  g_Point_list.push(point);
+
+  render_shapes();
 }
