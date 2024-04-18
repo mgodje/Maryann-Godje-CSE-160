@@ -168,6 +168,7 @@ class Vector3 {
         // Insert your code here.
         // This function should change this vector (this.elements) and not create a new vector.
         // v / ||v||
+        // make a magnitude var so it doesn't get replaced each for loop iteration - Rohan Venkatapuram (Tutor) on 04/17/2024
         let mag = this.magnitude();
         for (let i = 0; i < 3; ++i) {
           // divide vector by its magnitude

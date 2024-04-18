@@ -213,6 +213,7 @@ function click(ev) {
   point.position = [x, y];
   point.color = g_selected_color.slice();
   point.size = g_selected_size;
+  point.segments = g_selected_segments;
   // store new point
   g_Point_list.push(point);
 

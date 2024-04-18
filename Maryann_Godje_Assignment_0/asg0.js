@@ -129,5 +129,6 @@ function angleBetween(v1, v2) {
 
 function areaTriangle(v1, v2) {
   let cross = Vector3.cross(v1, v2);
+  // just use cross vector for magnitude - Rohan Venkatapuram (Tutor) on 04/17/2024
   return cross.magnitude() / 2;
 }
