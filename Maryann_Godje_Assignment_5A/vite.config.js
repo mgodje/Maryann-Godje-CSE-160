@@ -1,3 +1,3 @@
 export default {
-    base: "/Maryann-Godje-CSE-160/"
+    base: "/Maryann-Godje-CSE-160/Maryann_Godje_Assignment_5A/dist/"
 };
