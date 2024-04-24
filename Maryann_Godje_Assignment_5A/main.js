@@ -23,8 +23,10 @@ function main() {
 
 	const loader = new THREE.TextureLoader();
 
-	const texture = loader.load( 'sheep.jpg' );
-	texture.colorSpace = THREE.SRGBColorSpace;
+	const texture_sheep = loader.load( 'sheep.jpg' );
+	const texture_hen = loader.load( 'Tex_Hen.png' );
+	texture_sheep.colorSpace = THREE.SRGBColorSpace;
+	texture_hen.colorSpace = THREE.SRGBColorSpace;
 
 	const color = 0xFFFFFF;
 	const intensity = 3;
@@ -86,9 +88,21 @@ function main() {
 		return cube;
 	}
 
-	function texturedObj( geometry, texture, x ) {
+	function texturedSheep( geometry, texture_sheep, x ) {
 		const material = new THREE.MeshBasicMaterial( {
-			map: texture
+			map: texture_sheep
+		} );
+		const obj_t = new THREE.Mesh( geometry, material );
+		scene.add( obj_t );
+
+		obj_t.position.x = x;
+
+		return obj_t;
+	}
+
+	function texturedHen( geometry, texture_hen, x ) {
+		const material = new THREE.MeshBasicMaterial( {
+			map: texture_hen
 		} );
 		const obj_t = new THREE.Mesh( geometry, material );
 		scene.add( obj_t );
@@ -99,8 +113,8 @@ function main() {
 	}
 
 	const shapes = [
-		texturedObj( geometry_cube, texture, 2 ),
-		texturedObj( geometry_sphere, texture, - 2 ),
+		texturedHen( geometry_cube, texture_hen, 2 ),
+		texturedSheep( geometry_sphere, texture_sheep, - 2 ),
 		// RGB: https://www.rapidtables.com/web/color/RGB_Color.html
 		makeCube( geometry_cylinder, 0xDEA2FF, 0 ),
 	];
