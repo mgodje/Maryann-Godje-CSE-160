@@ -1,9 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
-import {MTLLoader} from 'three/addons/loaders/MTLLoader.js';
-
-let OBJECTS = [];
+//import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
+//import {MTLLoader} from 'three/addons/loaders/MTLLoader.js';
 
 function main() {
 	const canvas = document.querySelector( '#c' );
@@ -32,32 +30,50 @@ function main() {
 	const intensity = 3;
 	const light = new THREE.DirectionalLight( color, intensity );
 	light.position.set( - 1, 2, 4 );
-	scene.add( light );	
+	scene.add( light );
 
-	const mtlLoader = new MTLLoader();
+	/*const mtlLoader = new MTLLoader();
 	const objLoader = new OBJLoader();
 	mtlLoader.load( 'Mesh_Hen.mtl', ( mtl ) => {
 		mtl.preload();
 		objLoader.setMaterials( mtl );
 		objLoader.load( 'Mesh_Hen.obj');
-		} );
+		} );*/
 
-	const boxWidth = 1;
-	const boxHeight = 1;
-	const boxDepth = 1;
-	const geometry = new THREE.BoxGeometry( boxWidth, boxHeight, boxDepth );
+	// set up cube dimensions
+	let boxWidth = 0.75;
+	let boxHeight = 0.75;
+	let boxDepth = 0.75;
 
-	function makeObj( geometry, objLoader, x ) {
+	// set up sphere dimensions
+	let sphereRadius = 0.5;
+	let spehereSegments = 32;
+	let sphereHeight = 32;
+
+	// set up cylinder dimensions
+	let cylinderTopRadius = 0.75;
+	let cylinderBottomRadius = 0.75;
+	let cylinderHeight = 0.75;
+	let cylinderRadialSegments = 32;
+
+	const geometry_cube = new THREE.BoxGeometry( boxWidth, boxHeight, boxDepth );
+	// how to generate a sphere: https://threejs.org/docs/#api/en/geometries/SphereGeometry
+	const geometry_sphere = new THREE.SphereGeometry(sphereRadius, spehereSegments, sphereHeight);
+	// how to generate a cylinder: https://threejs.org/docs/#api/en/geometries/CylinderGeometry
+	const geometry_cylinder = new THREE.CylinderGeometry(cylinderTopRadius, cylinderBottomRadius, cylinderHeight, cylinderRadialSegments);
+
+
+	function loadObj( geometry, objLoader, x ) {
 		const material = new THREE.MeshBasicMaterial( {
 			map: objLoader
 		} );
 
-		const cube = new THREE.Mesh( geometry, material );
-		scene.add( cube );
-		OBJECTS.push(cube);
-		cube.position.x = x;
+		const obj_l = new THREE.Mesh( geometry, material );
+		scene.add( obj_l );
 
-		return cube;
+		obj_l.position.x = x;
+
+		return obj_l;
 	}
 
 	function makeCube( geometry, color, x ) {
@@ -70,27 +86,28 @@ function main() {
 		return cube;
 	}
 
-	function texturedCube( geometry, texture, x ) {
+	function texturedObj( geometry, texture, x ) {
 		const material = new THREE.MeshBasicMaterial( {
 			map: texture
 		} );
-		const cube = new THREE.Mesh( geometry, material );
-		scene.add( cube );
+		const obj_t = new THREE.Mesh( geometry, material );
+		scene.add( obj_t );
 
-		cube.position.x = x;
+		obj_t.position.x = x;
 
-		return cube;
+		return obj_t;
 	}
 
-	const cubes = [
-		makeCube( geometry, 0x44aa88, 0 ),
-		texturedCube( geometry, texture, - 2 ),
-		makeObj( geometry, objLoader, 2 ),
+	const shapes = [
+		texturedObj( geometry_cube, texture, 2 ),
+		texturedObj( geometry_sphere, texture, - 2 ),
+		// RGB: https://www.rapidtables.com/web/color/RGB_Color.html
+		makeCube( geometry_cylinder, 0xDEA2FF, 0 ),
 	];
 
 	function render( time ) {
 		time *= 0.001; // convert time to seconds
-		cubes.forEach( ( cube, ndx ) => {
+		shapes.forEach( ( cube, ndx ) => {
 
 			const speed = 1 + ndx * .1;
 			const rot = time * speed;
@@ -98,6 +115,7 @@ function main() {
 			cube.rotation.y = rot;
 
 		} );
+
 		renderer.render( scene, camera );
 
 		requestAnimationFrame( render );
@@ -106,4 +124,3 @@ function main() {
 }
 
 main();
-
