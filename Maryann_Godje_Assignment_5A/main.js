@@ -34,14 +34,6 @@ function main() {
 	light.position.set( - 1, 2, 4 );
 	scene.add( light );
 
-	/*const mtlLoader = new MTLLoader();
-	const objLoader = new OBJLoader();
-	mtlLoader.load( 'Mesh_Hen.mtl', ( mtl ) => {
-		mtl.preload();
-		objLoader.setMaterials( mtl );
-		objLoader.load( 'Mesh_Hen.obj');
-		} );*/
-
 	// set up cube dimensions
 	let boxWidth = 0.5;
 	let boxHeight = 0.5;
@@ -64,7 +56,7 @@ function main() {
 	// how to generate a cylinder: https://threejs.org/docs/#api/en/geometries/CylinderGeometry
 	const geometry_cylinder = new THREE.CylinderGeometry(cylinderTopRadius, cylinderBottomRadius, cylinderHeight, cylinderRadialSegments);
 
-
+	// Tutor Rohan helped me reoragnize this function (04/24/2024)
 	function loadObj( x, y ) {
 		const mtlLoader = new MTLLoader();
 		const objLoader = new OBJLoader();
@@ -122,6 +114,8 @@ function main() {
 		// RGB: https://www.rapidtables.com/web/color/RGB_Color.html
 		makeCube( geometry_cylinder, 0xDEA2FF, 0 ),
 	];
+	// because loadObj doesn't return anything, we can't add it to the shapes array
+	// Tutor Rohan (04/24/2024)
 	loadObj(2, 1.2);
 
 	function render( time ) {
