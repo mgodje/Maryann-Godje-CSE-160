@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-//import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
-//import {MTLLoader} from 'three/addons/loaders/MTLLoader.js';
+import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
+import {MTLLoader} from 'three/addons/loaders/MTLLoader.js';
 
 function main() {
 	const canvas = document.querySelector( '#c' );
@@ -43,9 +43,9 @@ function main() {
 		} );*/
 
 	// set up cube dimensions
-	let boxWidth = 0.75;
-	let boxHeight = 0.75;
-	let boxDepth = 0.75;
+	let boxWidth = 0.5;
+	let boxHeight = 0.5;
+	let boxDepth = 0.5;
 
 	// set up sphere dimensions
 	let sphereRadius = 0.5;
@@ -65,17 +65,21 @@ function main() {
 	const geometry_cylinder = new THREE.CylinderGeometry(cylinderTopRadius, cylinderBottomRadius, cylinderHeight, cylinderRadialSegments);
 
 
-	function loadObj( geometry, objLoader, x ) {
-		const material = new THREE.MeshBasicMaterial( {
-			map: objLoader
+	function loadObj( x, y ) {
+		const mtlLoader = new MTLLoader();
+		const objLoader = new OBJLoader();
+		mtlLoader.load( 'materials.mtl', ( mtl ) => {
+			mtl.preload();
+			mtl.wireframe = false;
+			objLoader.setMaterials( mtl );
+			objLoader.load( 'model.obj', ( obj ) => {
+				scene.add( obj );
+				// how to scale in threejs: https://threejs.org/docs/#api/en/core/Object3D.scale
+				obj.children[0].scale.set(0.5, 0.5, 0.5);
+				obj.position.x = x;
+				obj.position.y = y;
+			} );
 		} );
-
-		const obj_l = new THREE.Mesh( geometry, material );
-		scene.add( obj_l );
-
-		obj_l.position.x = x;
-
-		return obj_l;
 	}
 
 	function makeCube( geometry, color, x ) {
@@ -100,7 +104,7 @@ function main() {
 		return obj_t;
 	}
 
-	function texturedHen( geometry, texture_hen, x ) {
+	/*function texturedHen( geometry, texture_hen, x ) {
 		const material = new THREE.MeshBasicMaterial( {
 			map: texture_hen
 		} );
@@ -110,14 +114,15 @@ function main() {
 		obj_t.position.x = x;
 
 		return obj_t;
-	}
+	}*/
 
 	const shapes = [
-		texturedHen( geometry_cube, texture_hen, 2 ),
+		makeCube( geometry_cube, 0x44aa88, 2),
 		texturedSheep( geometry_sphere, texture_sheep, - 2 ),
 		// RGB: https://www.rapidtables.com/web/color/RGB_Color.html
 		makeCube( geometry_cylinder, 0xDEA2FF, 0 ),
 	];
+	loadObj(2, 1.2);
 
 	function render( time ) {
 		time *= 0.001; // convert time to seconds
