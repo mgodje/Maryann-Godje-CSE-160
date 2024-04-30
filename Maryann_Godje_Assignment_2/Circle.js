@@ -6,8 +6,6 @@ class Circle {
       this.size = 2.0;
       this.segments = 10;
     }
-
-    // constructor(color, pos, size, seg)
   
     render() {
       var xy = this.position;

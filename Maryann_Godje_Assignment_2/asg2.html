@@ -12,7 +12,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>CSE 160 - Assignment 1</title>
+    <title>CSE 160 - Assignment 2</title>
   </head>
 
   <body onload="main()">
@@ -23,7 +23,27 @@
     </canvas>
 
     <p id="numdot">Performance will run here...</p>
+
+    <font size="+1">Yellow Block Animation ON/OFF:</font>
+    <br><br>
+    <button type="button" id="joint1_animation_ON">ON</button>
+    <button type="button" id="joint1_animation_OFF">OFF</button>
+    <br><br>
+
+    <font size="+1">Yellow Block Animation ON/OFF:</font>
+    <br><br>
+    <button type="button" id="joint2_animation_ON">ON</button>
+    <button type="button" id="joint2_animation_OFF">OFF</button>
+
+    <br><br>
+    Camera Angle <input type="range" min="0" max="100" value="100" class="slider" id="CameraAngle">
+    <br><br>
+    Joint Slider 1 <input type="range" min="0" max="100" value="100" class="slider" id="JointSlider1">
+    <br><br>
+    Joint Slider 2 <input type="range" min="0" max="100" value="100" class="slider" id="JointSlider2">
     
+    <!-- 
+
     <font size="+1">Primary Colors:</font>
     <br><br>
     <button type="button" id="Green">Green</button>
@@ -70,8 +90,9 @@
     <br><br>
     <font size="+1">Clear Canvas:</font>
     <br><br>
-    <button type="button" id="Clear">Clear</button>
+    <button type="button" id="Clear">Clear</button> -->
 
+    <script src="lib/cuon-matrix-cse160.js"></script>
     <script src="lib/webgl-utils.js"></script>
     <script src="lib/webgl-debug.js"></script>
     <script src="lib/cuon-utils.js"></script>
