@@ -35,18 +35,47 @@ class Cube {
     //   }
 
     // front of cube
-    draw_triangle_3d([0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0]);
-    // draw_triangle_3d([0.0, 0.0, -1.0, 1.0, 1.0, -1.0, 1.0, 0.0, -1.0]);
-    // draw_triangle_3d([0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0]);
-    // draw_triangle_3d([0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0]);
-    draw_triangle_3d([0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0]);
-    //draw_triangle_3d([0.0, 0.0, -1.0, 0.0, 1.0, -1.0, 1.0, 1.0, -1.0]);
+    draw_triangle_3d([-1.0, -1.0, -1.0,   1.0, 1.0, -1.0,   1.0, -1.0, -1.0]);
+    draw_triangle_3d([-1.0, -1.0, -1.0,   1.0, 1.0, -1.0,   -1.0, 1.0, -1.0]);
+    
+    // back of cube
+    gl.uniform4f(u_FragColor, rgba[0]*.9, rgba[1]*.9, rgba[2]*.9, rgba[3]);
+    
+    draw_triangle_3d([-1.0, -1.0, 1.0,   1.0, 1.0, 1.0,   1.0, -1.0, 1.0]);
+    draw_triangle_3d([-1.0, -1.0, 1.0,   1.0, 1.0, 1.0,   -1.0, 1.0, 1.0]);
+    
+    // top of cube
+    gl.uniform4f(u_FragColor, rgba[0]*.7, rgba[1]*.7, rgba[2]*.7, rgba[3]);
+    
+    draw_triangle_3d([-1.0, 1.0, -1.0,   -1.0, 1.0, 1.0,   1.0, 1.0, 1.0]);
+    draw_triangle_3d([1.0, 1.0, -1.0,   1.0, 1.0, 1.0,   -1.0, 1.0, -1.0]);
+
+    // bottom of cube
+    gl.uniform4f(u_FragColor, rgba[0]*.5, rgba[1]*.5, rgba[2]*.5, rgba[3]);
+
+    draw_triangle_3d([-1.0, -1.0, -1.0,   -1.0, -1.0, 1.0,   1.0, -1.0, 1.0]);
+    draw_triangle_3d([1.0, -1.0, -1.0,   1.0, -1.0, 1.0,   -1.0, -1.0, -1.0]);
+
+    // right of cube
+    gl.uniform4f(u_FragColor, rgba[0]*.3, rgba[1]*.3, rgba[2]*.3, rgba[3]);
+
+    draw_triangle_3d([1.0, -1.0, -1.0,    1.0, 1.0, -1.0,    1.0, -1.0, 1.0]);
+    draw_triangle_3d([1.0, 1.0, 1.0,    1.0, 1.0, -1.0,    1.0, -1.0, 1.0]);
+    
+    // left of cube
+    gl.uniform4f(u_FragColor, rgba[0]*.1, rgba[1]*.1, rgba[2]*.1, rgba[3]);
+
+    draw_triangle_3d([-1.0, -1.0, -1.0,    -1.0, 1.0, -1.0,   -1.0, -1.0, 1.0]);
+    draw_triangle_3d([-1.0, 1.0, 1.0,    -1.0, 1.0, -1.0,    -1.0, -1.0, 1.0]);
+
+    // right of cube
+    // draw_triangle_3d([0.0, 0.0, 0.0,    1.0, 1.0, 0.0,    1.0, 0.0, 0.0]);
+    // draw_triangle_3d([0.0, 0.0, 0.0,    1.0, 1.0, 0.0,    1.0, 0.0, 0.0]);
+    // draw_triangle_3d([0.0, 0.0, 0.0,    0.0, 1.0, 0.0,    1.0, 1.0, 0.0]);
+    // draw_triangle_3d([0.0, 0.0, 0.0,    0.0, 1.0, 0.0,    1.0, 1.0, 0.0]);
+  
 
     gl.uniform4f(u_FragColor, rgba[0]*.9, rgba[1]*.9, rgba[2]*.9, rgba[3]);
-
-    // top of cube
-    draw_triangle_3d([0.0, 1.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0]);
-    draw_triangle_3d([0.0, 1.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0]);
 
     }
 } 
