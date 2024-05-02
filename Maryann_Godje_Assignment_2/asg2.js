@@ -61,11 +61,6 @@ function main() {
   // Specify the color for clearing <canvas>
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
-  // render shapes
-  //gl.clear(gl.COLOR_BUFFER_BIT);
-  //render_shapes();
-  //render_shapes();
-  //tick();
   requestAnimationFrame(tick);
 }
 
@@ -138,8 +133,13 @@ function html_actions() {
   document.getElementById('joint2_animation_ON').onclick = function() {
     g_joint2_animation = true;
   };
-  
+
   // sliders
+  document.getElementById('CameraAngle').addEventListener('mousemove', function() {
+    g_angle = this.value;
+    render_shapes();
+  })
+
   document.getElementById('CameraAngle').addEventListener('mousemove', function() {
     g_angle = this.value;
     render_shapes();
@@ -154,76 +154,6 @@ function html_actions() {
     g_joint2 = this.value;
     render_shapes();
   })
-
-  // color buttons
-  // document.getElementById('Green').onclick = function() {
-  //   g_selected_color = [0.0, 1.0, 0.0, 1.0];
-  // };
-  // document.getElementById('Red').onclick = function() {
-  //   g_selected_color = [1.0, 0.0, 0.0, 1.0];
-  // };
-  // document.getElementById('Blue').onclick = function() {
-  //   g_selected_color = [0.0, 0.0, 1.0, 1.0];
-  // };
-  // document.getElementById('Yellow').onclick = function() {
-  //   g_selected_color = [1.0, 1.0, 0.0, 1.0];
-  // };
-  // document.getElementById('Pink').onclick = function() {
-  //   g_selected_color = [1.0, 0.0, 0.5, 1.0];
-  // };
-  // document.getElementById('Purple').onclick = function() {
-  //   g_selected_color = [0.5, 0.0, 0.5, 1.0];
-  // };
-  // document.getElementById('Orange').onclick = function() {
-  //   g_selected_color = [1.0, 0.5, 0.0, 1.0];
-  // };
-  // document.getElementById('Grey').onclick = function() {
-  //   g_selected_color = [0.5, 0.5, 0.5, 1.0];
-  // };
-  // document.getElementById('White').onclick = function() {
-  //   g_selected_color = [1.0, 1.0, 1.0, 1.0];
-  // };
-
-  // // shape buttons
-  // document.getElementById('Point').onclick = function() {
-  //   g_selected_type = POINT;
-  // };
-
-  // document.getElementById('Triangle').onclick = function() {
-  //   g_selected_type = TRIANGLE;
-  // };
-
-  // document.getElementById('Circle').onclick = function() {
-  //   g_selected_type = CIRCLE;
-  // };
-
-  // clear button
-  // document.getElementById('Clear').onclick = function() {
-  //   g_Point_list = [];
-  //   render_shapes();
-  // };
-
-  // document.getElementById('RedSlider').addEventListener('mouseup', function() {
-  //   g_selected_color[0] = this.value / 100;
-  // });
-
-  // document.getElementById('GreenSlider').addEventListener('mouseup', function() {
-  //   g_selected_color[1] = this.value / 100;
-  // }); 
-
-  // document.getElementById('BlueSlider').addEventListener('mouseup', function() {
-  //   g_selected_color[2] = this.value / 100;
-  // });
-
-  // // size slider
-  // document.getElementById('SizeSlider').addEventListener('mouseup', function() {
-  //   g_selected_size = this.value;
-  // }); 
-
-  // // segments slider
-  // document.getElementById('CircleSlider').addEventListener('mouseup', function() {
-  //   g_selected_segments = this.value;
-  // });
 }
 
 function xy_coordinate_covert_to_GL(ev) {
@@ -238,7 +168,6 @@ function xy_coordinate_covert_to_GL(ev) {
 }
 
 function render_shapes() {
-  var start_time = performance.now();
   
   // rotation of matrix
   var globalRotateM = new Matrix4().rotate(g_angle, 0, 1, 0);
@@ -248,49 +177,46 @@ function render_shapes() {
   gl.clear(gl.COLOR_BUFFER_BIT);
   gl.clear(gl.DEPTH_BUFFER_BIT);
 
-  // var len = g_Point_list.length;
-  // for(var i = 0; i < len; i++) {
-  //   g_Point_list[i].render();
-  // }
-
   draw_triangle_3d([-1.0, 0.0, 0.0, -0.5, -1.0, 0.0, 0.0, 0.0, 0.0]);
 
+  // red
   var body = new Cube();
   body.color = [1.0, 0.0, 0.0, 1.0];
   body.matrix.translate(-0.25, -0.75, 0.0);
-  //body.matrix.rotate(5, 1, 0, 0);
-  body.matrix.scale(0.5, 0.3, 0.5);
+  body.matrix.rotate(5, 1, 0, 0);
+  body.matrix.scale(0.25, 0.15, 0.25);
   body.render();
 
+  // yellow
   var leftArm = new Cube();
   leftArm.color = [1.0, 1.0, 0.0, 1.0];
-  leftArm.matrix.setTranslate(0.0, -0.5, 0.0);
-  //leftArm.matrix.rotate(-5, 0, 0, 1);
+  leftArm.matrix.translate(-0.25, -0.20, 0.0);
+  leftArm.matrix.translate(0, -0.4, 0);
   leftArm.matrix.rotate(-g_joint1, 0, 0, 1);
-  leftArm.matrix.translate(-0.5, 0.0, 0.0);
+  leftArm.matrix.translate(0, 0.4, 0);
   var leftArm_coordinates = new Matrix4(leftArm.matrix);
-  leftArm.matrix.scale(0.25, 0.7, 0.4999);
+  leftArm.matrix.scale(0.2, 0.4, 0.3999);
   leftArm.render();
 
+  // pink
   var box = new Cube();
   box.color = [1.0, 0.0, 1.0, 1.0];
   box.matrix = leftArm_coordinates;
-  box.matrix.translate(0, 0.65, 0.0); 
-  box.matrix.rotate(g_joint2, 0, 0, 1);
-  box.matrix.translate(-0.25, 0.0, 0.0);
-  box.matrix.translate(-0.5, 0, -0.0001)
-  box.matrix.scale(0.3, 0.3, 0.3); 
+  box.matrix.translate(0, 0.450002, 0.0); 
+  box.matrix.translate(0, -0.07, 0)
+  box.matrix.rotate(-g_joint2, 0, 0, 1);
+  //box.matrix.translate(-0.25, 0.0, 0.0);
+  box.matrix.translate(0, 0.07, 0)
+  box.matrix.scale(0.1, 0.1, 0.5); 
   box.render();
 
-  //var duration = performance.now() - start_time;
-  //duration_performance("numdot: " + len + "; ms: " + Math.floor(duration) + "; fps: " + Math.floor(10000 / duration) / 10, "numdot");
+  //drawAnimal();
+
 }
 
 function tick() {
   g_seconds = performance.now() / 1000 - g_start_time;
   update_animations();
-  // console.log(performance.now());
-  // console.log(g_seconds);
   render_shapes();
   requestAnimationFrame(tick);
 }
@@ -298,7 +224,6 @@ function tick() {
 function update_animations() {
   if (g_joint1_animation) {
     g_joint1 = 45 * Math.sin(g_seconds);
-    debugger;
   }
   if (g_joint2_animation) {
     g_joint2 = 45 * Math.sin(g_seconds * 3);
