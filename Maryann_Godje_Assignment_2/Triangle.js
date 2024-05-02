@@ -136,5 +136,4 @@ function draw_triangle_3d(vertices) {
   gl.enableVertexAttribArray(a_Position);
 
   gl.drawArrays(gl.TRIANGLES, 0, n);
-  // OLD CODE
 }

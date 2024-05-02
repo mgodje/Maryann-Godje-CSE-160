@@ -17,26 +17,46 @@
 
   <body onload="main()">
     <!-- How to increase font size: https://www.geeksforgeeks.org/html-font-tag/ -->
-    <font size="+2">Hey! Welcome to this Canvas!</font>
+    <font size="+2">Here is a distinguished owl standing on a branch!</font>
+    
     <br><br>
+    <font size="+1.5">He is kinda goofy as his joints move in strange ways.</font>
+    <br><br>
+    <font size="+1.5">Owls are generally flexible, but he's more than usual.</font>
+
+    <p id="numdot">Performance will run here...</p>
+
     <canvas id="webgl" width="400" height="400">
     </canvas>
 
-    <!-- <p id="numdot">Performance will run here...</p> --->
-
     <br><br>
-    <font size="+1">Yellow Block Animation ON/OFF:</font>
+    <font size="+1">Head Block Animation ON/OFF:</font>
     <br><br>
     <button type="button" id="joint1_animation_ON">ON</button>
     <button type="button" id="joint1_animation_OFF">OFF</button>
-    Joint Slider 1 <input type="range" min="-100" max="100" value="0" class="slider" id="JointSlider1">
+    Head <input type="range" min="-50" max="50" value="0" class="slider" id="JointSlider1">
     <br><br>
 
-    <font size="+1">Magenta Block Animation ON/OFF:</font>
+    <font size="+1">Ears Block Animation ON/OFF:</font>
     <br><br>
     <button type="button" id="joint2_animation_ON">ON</button>
     <button type="button" id="joint2_animation_OFF">OFF</button>
-    Joint Slider 2 <input type="range" min="-100" max="100" value="0" class="slider" id="JointSlider2">
+    Ears <input type="range" min="-5" max="5" value="0" class="slider" id="JointSlider2">
+
+    <br><br>
+    <font size="+1">Left Wing Block Animation ON/OFF:</font>
+    <br><br>
+    <button type="button" id="joint3_animation_ON">ON</button>
+    <button type="button" id="joint3_animation_OFF">OFF</button>
+    Left Wing<input type="range" min="-5" max="5" value="0" class="slider" id="JointSlider3">
+
+    <br><br>
+    <font size="+1">Right Wing Block Animation ON/OFF:</font>
+    <br><br>
+    <button type="button" id="joint4_animation_ON">ON</button>
+    <button type="button" id="joint4_animation_OFF">OFF</button>
+    Right Wing <input type="range" min="-5" max="5" value="0" class="slider" id="JointSlider4">
+
 
     <br><br>
     <font size="+1">Camera Angle:</font>
@@ -102,7 +122,7 @@
     <script src="Circle.js"></script>
     <script src="Point.js"></script>
     <script src="Cube.js"></script>
-    <script src="animal.js"></script>
+    <script src="Owl.js"></script>
     <script src="asg2.js"></script>
   </body>
 </html>

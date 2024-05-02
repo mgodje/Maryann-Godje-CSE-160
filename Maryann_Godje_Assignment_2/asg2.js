@@ -36,10 +36,14 @@ let g_selected_segments = 10;
 let g_angle = 0.0;
 let g_joint1 = 0.0;
 let g_joint2 = 0.0;
+let g_joint3 = 0.0;
+let g_joint4 = 0.0;
 var g_seconds = performance.now() / 1000;  
 var g_start_time = performance.now() / 1000 - g_seconds;
 let g_joint1_animation = false;
 let g_joint2_animation = false;
+let g_joint3_animation = false;
+let g_joint4_animation = false;
 
 var g_Point_list = [];
 
@@ -126,7 +130,7 @@ function html_actions() {
   document.getElementById('joint1_animation_ON').onclick = function() {
     g_joint1_animation = true;
   };
-
+  
   document.getElementById('joint2_animation_OFF').onclick = function() {
     g_joint2_animation = false;
   };
@@ -134,25 +138,49 @@ function html_actions() {
     g_joint2_animation = true;
   };
 
+  document.getElementById('joint3_animation_OFF').onclick = function() {
+    g_joint3_animation = false;
+  };
+  document.getElementById('joint3_animation_ON').onclick = function() {
+    g_joint3_animation = true;
+  };
+
+  document.getElementById('joint4_animation_OFF').onclick = function() {
+    g_joint4_animation = false;
+  };
+  document.getElementById('joint4_animation_ON').onclick = function() {
+    g_joint4_animation = true;
+  };
+
   // sliders
   document.getElementById('CameraAngle').addEventListener('mousemove', function() {
     g_angle = this.value;
-    render_shapes();
+    renderScene();
   })
 
   document.getElementById('CameraAngle').addEventListener('mousemove', function() {
     g_angle = this.value;
-    render_shapes();
+    renderScene();
   })
 
   document.getElementById('JointSlider1').addEventListener('mousemove', function() {
     g_joint1 = this.value;
-    render_shapes();
+    renderScene();
   })
 
   document.getElementById('JointSlider2').addEventListener('mousemove', function() {
     g_joint2 = this.value;
-    render_shapes();
+    renderScene();
+  })
+
+  document.getElementById('JointSlider3').addEventListener('mousemove', function() {
+    g_joint3 = this.value;
+    renderScene();
+  })
+
+  document.getElementById('JointSlider4').addEventListener('mousemove', function() {
+    g_joint4 = this.value;
+    renderScene();
   })
 }
 
@@ -167,8 +195,9 @@ function xy_coordinate_covert_to_GL(ev) {
   return([x, y]);
 }
 
-function render_shapes() {
-  
+function renderScene() {
+  var start_time = performance.now();
+
   // rotation of matrix
   var globalRotateM = new Matrix4().rotate(g_angle, 0, 1, 0);
   gl.uniformMatrix4fv(u_GlobalRotateMatrix, false, globalRotateM.elements); 
@@ -177,47 +206,34 @@ function render_shapes() {
   gl.clear(gl.COLOR_BUFFER_BIT);
   gl.clear(gl.DEPTH_BUFFER_BIT);
 
-  draw_triangle_3d([-1.0, 0.0, 0.0, -0.5, -1.0, 0.0, 0.0, 0.0, 0.0]);
+  //draw_triangle_3d([-1.0, 0.0, 0.0, -0.5, -1.0, 0.0, 0.0, 0.0, 0.0])
 
-  // red
-  var body = new Cube();
-  body.color = [1.0, 0.0, 0.0, 1.0];
-  body.matrix.translate(-0.25, -0.75, 0.0);
-  body.matrix.rotate(5, 1, 0, 0);
-  body.matrix.scale(0.25, 0.15, 0.25);
-  body.render();
+  drawOwl();
 
-  // yellow
-  var leftArm = new Cube();
-  leftArm.color = [1.0, 1.0, 0.0, 1.0];
-  leftArm.matrix.translate(-0.25, -0.20, 0.0);
-  leftArm.matrix.translate(0, -0.4, 0);
-  leftArm.matrix.rotate(-g_joint1, 0, 0, 1);
-  leftArm.matrix.translate(0, 0.4, 0);
-  var leftArm_coordinates = new Matrix4(leftArm.matrix);
-  leftArm.matrix.scale(0.2, 0.4, 0.3999);
-  leftArm.render();
+  var len = g_Point_list.length;
+  for(var i = 0; i < len; i++) {
+    g_Point_list[i].render();
+  }
 
-  // pink
-  var box = new Cube();
-  box.color = [1.0, 0.0, 1.0, 1.0];
-  box.matrix = leftArm_coordinates;
-  box.matrix.translate(0, 0.450002, 0.0); 
-  box.matrix.translate(0, -0.07, 0)
-  box.matrix.rotate(-g_joint2, 0, 0, 1);
-  //box.matrix.translate(-0.25, 0.0, 0.0);
-  box.matrix.translate(0, 0.07, 0)
-  box.matrix.scale(0.1, 0.1, 0.5); 
-  box.render();
-
-  //drawAnimal();
-
+  var duration = performance.now() - start_time;
+  duration_performance("numdot: " + len + "; ms: " + Math.floor(duration) + "; fps: " + Math.floor(10000 / duration) / 10, "numdot");
+  
 }
+
+function duration_performance(text, htmlID) {
+  var html_element = document.getElementById(htmlID);
+  if (!html_element) {
+    console.log("Failed to get " + htmlID + " from HTML");
+    return;
+  }
+  html_element.innerHTML = text;
+}
+
 
 function tick() {
   g_seconds = performance.now() / 1000 - g_start_time;
   update_animations();
-  render_shapes();
+  renderScene();
   requestAnimationFrame(tick);
 }
 
@@ -226,7 +242,13 @@ function update_animations() {
     g_joint1 = 45 * Math.sin(g_seconds);
   }
   if (g_joint2_animation) {
-    g_joint2 = 45 * Math.sin(g_seconds * 3);
+    g_joint2 = 5 * Math.sin(g_seconds * 3);
+  }
+  if (g_joint3_animation) {
+    g_joint3 = 5 * Math.cos(g_seconds * 6);
+  }
+  if (g_joint4_animation) {
+    g_joint4 = 5 * Math.cos(g_seconds * 6);
   }
 }
 
@@ -253,14 +275,5 @@ function click(ev) {
   // store new point
   g_Point_list.push(point);
 
-  render_shapes();
+  renderScene();
 }
-
-// function duration_performance(text, htmlID) {
-//   var html_element = document.getElementById(htmlID);
-//   if (!html_element) {
-//     console.log("Failed to get " + htmlID + " from HTML");
-//     return;
-//   }
-//   html_element.innerHTML = text;
-// }
