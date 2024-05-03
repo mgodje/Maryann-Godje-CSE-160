@@ -1,0 +1,38 @@
+ <!-- Got help from:
+  1) Tutor: Rohan Venkatapuram on 04/17/2024
+    - links provided:
+      -  https://www.geogebra.org/calculator
+      - https://people.ucsc.edu/~rnvenkat/asgn1/asgn1.html
+  2) https://www.geeksforgeeks.org/html-font-tag/
+  3) https://blog.hubspot.com/website/insert-image-in-html#:~:text=To%20insert%20an%20image%20in%20HTML%2C%20use%20the%20image%20tag,section%20of%20your%20HTML%20file.&text=The%20HTML%20image%20element%20is,not%20have%20a%20closing%20tag.
+  4) https://www.today.com/pets/just-because-11-pictures-chicks-hats-984489 
+
+  -->
+  
+  <!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <link rel="stylesheet" type="text/css" href="index.css">
+      <meta charset="utf-8" />
+      <title>CSE 160 - Assignment 3A</title>
+    </head>
+  
+    <body onload="main()">
+  
+    <div id="container">
+      <!-- How to increase font size: https://www.geeksforgeeks.org/html-font-tag/ -->
+      <font size="+2">Hey There!</font>
+      
+      <p id="numdot">Performance will run here...</p>
+        <canvas id="webgl" width="600" height="600">
+        </canvas>
+    </div>
+  
+      <script src="lib/cuon-matrix-cse160.js"></script>
+      <script src="lib/webgl-utils.js"></script>
+      <script src="lib/webgl-debug.js"></script>
+      <script src="lib/cuon-utils.js"></script>
+      <script src="Cube.js"></script>
+      <script src="asg3a.js"></script>
+    </body>
+  </html>
