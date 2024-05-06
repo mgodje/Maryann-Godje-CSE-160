@@ -1,19 +1,27 @@
 // ColoredPoint.js (c) 2012 matsuda
 // Vertex shader program
 var VSHADER_SOURCE = `
+  precision mediump float;
   attribute vec4 a_Position;
+  attribute vec2 a_UV; 
+  varying vec2 v_UV;
   uniform mat4 u_ModelMatrix;
   uniform mat4 u_GlobalRotateMatrix;
+  uniform mat4 u_ViewMatrix;
+  uniform mat4 u_ProjectionMatrix;
   void main() {
-    gl_Position = u_GlobalRotateMatrix * u_ModelMatrix * a_Position;
+    gl_Position = u_ProjectionMatrix * u_ViewMatrix * u_GlobalRotateMatrix * u_ModelMatrix * a_Position;
+    v_UV = a_UV;
   }`
 
 // Fragment shader program
 var FSHADER_SOURCE = `
   precision mediump float;
+  varying vec2 v_UV;
   uniform vec4 u_FragColor;
   void main() {
     gl_FragColor = u_FragColor;
+    gl_FragColor = vec4(v_UV, 1.0, 1.0);
   }`
 
 // constant vars
@@ -21,14 +29,19 @@ const POINT = 0;
 const TRIANGLE = 1;
 const CIRCLE = 2;
 
-// Global vars
-let gl;
-let canvas;
+// Shader vars
 let a_Position;
 let u_FragColor;
 let u_ModelMatrix;
 let u_GlobalRotateMatrix;
 let u_Size;
+let a_UV;
+let u_ViewMatrix;
+let u_ProjectionMatrix;
+
+// Global vars 
+let gl;
+let canvas;
 let g_selected_color = [1.0, 1.0, 1.0, 1.0];
 let g_selected_size = 2.0;
 let g_selected_type = POINT;
@@ -105,6 +118,24 @@ function connect_vars_to_GLSL() {
     u_GlobalRotateMatrix = gl.getUniformLocation(gl.program, 'u_GlobalRotateMatrix');
     if (!u_GlobalRotateMatrix) {
       console.log('Failed to get the storage location of u_GlobalRotateMatrix');
+      return;
+    }
+
+    a_UV = gl.getUniformLocation(gl.program, 'a_UV');
+    if (a_UV < 0) {
+      console.log('Failed to get the storage location of a_UV');
+      return;
+    }
+
+    u_ViewMatrix = gl.getUniformLocation(gl.program, 'u_ViewMatrix');
+    if (!u_ViewMatrix) {
+      console.log('Failed to get the storage location of u_ViewMatrix');
+      return;
+    }
+
+    u_ProjectionMatrix = gl.getUniformLocation(gl.program, 'u_ProjectionMatrix');
+    if (!u_ProjectionMatrix) {
+      console.log('Failed to get the storage location of u_ProjectionMatrix');
       return;
     }
 
@@ -202,6 +233,8 @@ function renderScene(timestamp) {
   for(var i = 0; i < len; i++) {
     g_Point_list[i].render();
   }
+
+  drawOwl();
 
   // Tutor Rohan fixed the performance issue with timestamp
   var duration = timestamp - g_start_time; 
