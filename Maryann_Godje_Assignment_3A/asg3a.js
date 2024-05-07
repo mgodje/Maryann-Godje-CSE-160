@@ -19,9 +19,11 @@ var FSHADER_SOURCE = `
   precision mediump float;
   varying vec2 v_UV;
   uniform vec4 u_FragColor;
+  uniform sampler2D u_Sampler1;  
   void main() {
     gl_FragColor = u_FragColor;
     gl_FragColor = vec4(v_UV, 1.0, 1.0);
+    gl_FragColor = texture2D(u_Sampler1, v_UV);
   }`
 
 // constant vars
@@ -38,6 +40,7 @@ let u_Size;
 let a_UV;
 let u_ViewMatrix;
 let u_ProjectionMatrix;
+let u_Sampler1;
 
 // Global vars 
 let gl;
@@ -48,6 +51,13 @@ let g_selected_type = POINT;
 let g_selected_segments = 10;
 var g_seconds = 0;  
 var g_start_time;
+var g_angle = 0;
+var g_joint1 = 0;
+var g_joint2 = 0;
+var g_joint3 = 0;
+var g_joint4 = 0;
+
+
 var g_Point_list = [];
 
 function main() {
@@ -64,6 +74,8 @@ function main() {
       click(ev);
     }
    };
+
+  initTextures(gl, 0);
 
   // Specify the color for clearing <canvas>
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
@@ -139,70 +151,76 @@ function connect_vars_to_GLSL() {
       return;
     }
 
+    u_Sampler1 = gl.getUniformLocation(gl.program, 'u_Sampler1');
+    if (!u_Sampler1) {
+      console.log('Failed to get the storage location of u_Sampler1');
+      return;
+    }
+
     var identityM = new Matrix4();
     gl.uniformMatrix4fv(u_ModelMatrix, false, identityM.elements);
 }
 
 function html_actions() {
-  // animation buttons
-//   document.getElementById('joint1_animation_OFF').onclick = function() {
-//     g_joint1_animation = false;
-//   };
-//   document.getElementById('joint1_animation_ON').onclick = function() {
-//     g_joint1_animation = true;
-//   };
+// animation buttons
+  document.getElementById('joint1_animation_OFF').onclick = function() {
+    g_joint1_animation = false;
+  };
+  document.getElementById('joint1_animation_ON').onclick = function() {
+    g_joint1_animation = true;
+  };
   
-//   document.getElementById('joint2_animation_OFF').onclick = function() {
-//     g_joint2_animation = false;
-//   };
-//   document.getElementById('joint2_animation_ON').onclick = function() {
-//     g_joint2_animation = true;
-//   };
+  document.getElementById('joint2_animation_OFF').onclick = function() {
+    g_joint2_animation = false;
+  };
+  document.getElementById('joint2_animation_ON').onclick = function() {
+    g_joint2_animation = true;
+  };
 
-//   document.getElementById('joint3_animation_OFF').onclick = function() {
-//     g_joint3_animation = false;
-//   };
-//   document.getElementById('joint3_animation_ON').onclick = function() {
-//     g_joint3_animation = true;
-//   };
+  document.getElementById('joint3_animation_OFF').onclick = function() {
+    g_joint3_animation = false;
+  };
+  document.getElementById('joint3_animation_ON').onclick = function() {
+    g_joint3_animation = true;
+  };
 
-//   document.getElementById('joint4_animation_OFF').onclick = function() {
-//     g_joint4_animation = false;
-//   };
-//   document.getElementById('joint4_animation_ON').onclick = function() {
-//     g_joint4_animation = true;
-//   };
+  document.getElementById('joint4_animation_OFF').onclick = function() {
+    g_joint4_animation = false;
+  };
+  document.getElementById('joint4_animation_ON').onclick = function() {
+    g_joint4_animation = true;
+  };
 
-//   // sliders
-//   document.getElementById('CameraAngle').addEventListener('mousemove', function() {
-//     g_angle = this.value;
-//     renderScene();
-//   })
+  // sliders
+  document.getElementById('CameraAngle').addEventListener('mousemove', function() {
+    g_angle = this.value;
+    renderScene();
+  })
 
-//   document.getElementById('CameraAngle').addEventListener('mousemove', function() {
-//     g_angle = this.value;
-//     renderScene();
-//   })
+  document.getElementById('CameraAngle').addEventListener('mousemove', function() {
+    g_angle = this.value;
+    renderScene();
+  })
 
-//   document.getElementById('JointSlider1').addEventListener('mousemove', function() {
-//     g_joint1 = this.value;
-//     renderScene();
-//   })
+  document.getElementById('JointSlider1').addEventListener('mousemove', function() {
+    g_joint1 = this.value;
+    renderScene();
+  })
 
-//   document.getElementById('JointSlider2').addEventListener('mousemove', function() {
-//     g_joint2 = this.value;
-//     renderScene();
-//   })
+  document.getElementById('JointSlider2').addEventListener('mousemove', function() {
+    g_joint2 = this.value;
+    renderScene();
+  })
 
-//   document.getElementById('JointSlider3').addEventListener('mousemove', function() {
-//     g_joint3 = this.value;
-//     renderScene();
-//   })
+  document.getElementById('JointSlider3').addEventListener('mousemove', function() {
+    g_joint3 = this.value;
+    renderScene();
+  })
 
-//   document.getElementById('JointSlider4').addEventListener('mousemove', function() {
-//     g_joint4 = this.value;
-//     renderScene();
-//   })
+  document.getElementById('JointSlider4').addEventListener('mousemove', function() {
+    g_joint4 = this.value;
+    renderScene();
+  })
 }
 
 function xy_coordinate_covert_to_GL(ev) {
@@ -216,12 +234,56 @@ function xy_coordinate_covert_to_GL(ev) {
   return([x, y]);
 }
 
+function initTextures() {
+
+  // Create the image object
+  var image = new Image();
+  if (!image) {
+    console.log('Failed to create the image object');
+    return false;
+  }
+  // Register the event handler to be called when image loading is completed
+  image.onload = function(){ sendTextureToGLSL(image); };
+  // Tell the browser to load an Image
+  image.src = 'fried_chicken.jpg';
+
+  return true;
+}
+
+function sendTextureToGLSL(image) {
+  // Create a texture object
+  var texture = gl.createTexture();
+  if (!texture) {
+    console.log('Failed to create the texture object');
+    return false;
+  }
+  
+  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);  // Flip the image's y axis
+  // Activate texture unit0
+  gl.activeTexture(gl.TEXTURE0);
+  // Bind the texture object to the target
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+
+  // Set the texture parameter
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+  // Set the image to texture
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
+  
+  // Set the texture unit 0 to the sampler
+  gl.uniform1i(u_Sampler1, 0);
+  
+  // Clear <canvas>
+  gl.clear(gl.COLOR_BUFFER_BIT);
+
+  // Draw the rectangle
+  gl.drawArrays(gl.TRIANGLE_STRIP, 0, n);
+}
+
 function renderScene(timestamp) {
 
-  // ASG2 Code
-    //   // rotation of matrix
-    //   var globalRotateM = new Matrix4().rotate(g_angle, 0, 1, 0);
-    //   gl.uniformMatrix4fv(u_GlobalRotateMatrix, false, globalRotateM.elements); 
+  // rotation of matrix
+  var globalRotateM = new Matrix4().rotate(g_angle, 0, 1, 0);
+  gl.uniformMatrix4fv(u_GlobalRotateMatrix, false, globalRotateM.elements); 
 
   // Clear <canvas>
   gl.clear(gl.COLOR_BUFFER_BIT);
@@ -236,7 +298,7 @@ function renderScene(timestamp) {
 
   drawOwl();
 
-  // Tutor Rohan fixed the performance issue with timestamp
+  // Tutor Rohan fixed the performance issue with timestamp - 05/03/2024
   var duration = timestamp - g_start_time; 
   if (timestamp % 1000 <= 100) {
     duration_performance("numdot: " + len + "; ms: " + Math.floor(duration) + "; fps: " + Math.floor(10000 / duration) / 10, "numdot");
@@ -251,12 +313,6 @@ function duration_performance(text, htmlID) {
     return;
   }
   html_element.innerHTML = text;
-}
-
-function tick(timestamp) {
-  g_seconds = performance.now() / 1000 - g_start_time;
-  renderScene(timestamp);
-  requestAnimationFrame(tick);
 }
 
 function click(ev) {
@@ -283,4 +339,10 @@ function click(ev) {
   g_Point_list.push(point);
 
   renderScene();
+}
+
+function tick(timestamp) {
+  g_seconds = performance.now() / 1000 - g_start_time;
+  renderScene(timestamp);
+  requestAnimationFrame(tick);
 }
