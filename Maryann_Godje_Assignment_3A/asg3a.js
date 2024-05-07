@@ -20,10 +20,25 @@ var FSHADER_SOURCE = `
   varying vec2 v_UV;
   uniform vec4 u_FragColor;
   uniform sampler2D u_Sampler1;  
+  uniform int u_whichTexture;
   void main() {
     gl_FragColor = u_FragColor;
     gl_FragColor = vec4(v_UV, 1.0, 1.0);
     gl_FragColor = texture2D(u_Sampler1, v_UV);
+
+    if (u_whichTexture == -2) {
+      gl_FragColor = u_FragColor;
+    }
+    else if (u_whichTexture == -1) {
+      gl_FragColor = vec4(v_UV, 1.0, 1.0);
+    }
+    else if (u_whichTexture == 0) {
+      gl_FragColor = texture2D(u_Sampler1, v_UV);
+    }
+    else {
+      gl_FragColor = vec4(1.0, 0.2, 0.2, 1.0);
+    }
+
   }`
 
 // constant vars
@@ -41,6 +56,7 @@ let a_UV;
 let u_ViewMatrix;
 let u_ProjectionMatrix;
 let u_Sampler1;
+let u_whichTexture;
 
 // Global vars 
 let gl;
@@ -51,12 +67,6 @@ let g_selected_type = POINT;
 let g_selected_segments = 10;
 var g_seconds = 0;  
 var g_start_time;
-var g_angle = 0;
-var g_joint1 = 0;
-var g_joint2 = 0;
-var g_joint3 = 0;
-var g_joint4 = 0;
-
 
 var g_Point_list = [];
 
@@ -157,70 +167,76 @@ function connect_vars_to_GLSL() {
       return;
     }
 
+    u_whichTexture = gl.getUniformLocation(gl.program, 'u_whichTexture');
+    if (!u_whichTexture) {
+      console.log('Failed to get the storage location of u_whichTexture');
+      return;
+    }
+
     var identityM = new Matrix4();
     gl.uniformMatrix4fv(u_ModelMatrix, false, identityM.elements);
 }
 
 function html_actions() {
-// animation buttons
-  document.getElementById('joint1_animation_OFF').onclick = function() {
-    g_joint1_animation = false;
-  };
-  document.getElementById('joint1_animation_ON').onclick = function() {
-    g_joint1_animation = true;
-  };
+// // animation buttons
+//   document.getElementById('joint1_animation_OFF').onclick = function() {
+//     g_joint1_animation = false;
+//   };
+//   document.getElementById('joint1_animation_ON').onclick = function() {
+//     g_joint1_animation = true;
+//   };
   
-  document.getElementById('joint2_animation_OFF').onclick = function() {
-    g_joint2_animation = false;
-  };
-  document.getElementById('joint2_animation_ON').onclick = function() {
-    g_joint2_animation = true;
-  };
+//   document.getElementById('joint2_animation_OFF').onclick = function() {
+//     g_joint2_animation = false;
+//   };
+//   document.getElementById('joint2_animation_ON').onclick = function() {
+//     g_joint2_animation = true;
+//   };
 
-  document.getElementById('joint3_animation_OFF').onclick = function() {
-    g_joint3_animation = false;
-  };
-  document.getElementById('joint3_animation_ON').onclick = function() {
-    g_joint3_animation = true;
-  };
+//   document.getElementById('joint3_animation_OFF').onclick = function() {
+//     g_joint3_animation = false;
+//   };
+//   document.getElementById('joint3_animation_ON').onclick = function() {
+//     g_joint3_animation = true;
+//   };
 
-  document.getElementById('joint4_animation_OFF').onclick = function() {
-    g_joint4_animation = false;
-  };
-  document.getElementById('joint4_animation_ON').onclick = function() {
-    g_joint4_animation = true;
-  };
+//   document.getElementById('joint4_animation_OFF').onclick = function() {
+//     g_joint4_animation = false;
+//   };
+//   document.getElementById('joint4_animation_ON').onclick = function() {
+//     g_joint4_animation = true;
+//   };
 
-  // sliders
-  document.getElementById('CameraAngle').addEventListener('mousemove', function() {
-    g_angle = this.value;
-    renderScene();
-  })
+  // // sliders
+  // document.getElementById('CameraAngle').addEventListener('mousemove', function() {
+  //   g_angle = this.value;
+  //   renderScene();
+  // })
 
-  document.getElementById('CameraAngle').addEventListener('mousemove', function() {
-    g_angle = this.value;
-    renderScene();
-  })
+  // document.getElementById('CameraAngle').addEventListener('mousemove', function() {
+  //   g_angle = this.value;
+  //   renderScene();
+  // })
 
-  document.getElementById('JointSlider1').addEventListener('mousemove', function() {
-    g_joint1 = this.value;
-    renderScene();
-  })
+  // document.getElementById('JointSlider1').addEventListener('mousemove', function() {
+  //   g_joint1 = this.value;
+  //   renderScene();
+  // })
 
-  document.getElementById('JointSlider2').addEventListener('mousemove', function() {
-    g_joint2 = this.value;
-    renderScene();
-  })
+  // document.getElementById('JointSlider2').addEventListener('mousemove', function() {
+  //   g_joint2 = this.value;
+  //   renderScene();
+  // })
 
-  document.getElementById('JointSlider3').addEventListener('mousemove', function() {
-    g_joint3 = this.value;
-    renderScene();
-  })
+  // document.getElementById('JointSlider3').addEventListener('mousemove', function() {
+  //   g_joint3 = this.value;
+  //   renderScene();
+  // })
 
-  document.getElementById('JointSlider4').addEventListener('mousemove', function() {
-    g_joint4 = this.value;
-    renderScene();
-  })
+  // document.getElementById('JointSlider4').addEventListener('mousemove', function() {
+  //   g_joint4 = this.value;
+  //   renderScene();
+  // })
 }
 
 function xy_coordinate_covert_to_GL(ev) {
@@ -273,16 +289,22 @@ function sendTextureToGLSL(image) {
   gl.uniform1i(u_Sampler1, 0);
   
   // Clear <canvas>
-  gl.clear(gl.COLOR_BUFFER_BIT);
+  //gl.clear(gl.COLOR_BUFFER_BIT);
 
   // Draw the rectangle
-  gl.drawArrays(gl.TRIANGLE_STRIP, 0, n);
+  //gl.drawArrays(gl.TRIANGLE_STRIP, 0, n);
 }
 
 function renderScene(timestamp) {
 
+  var viewMatrix = new Matrix4();
+  gl.uniformMatrix4fv(u_ViewMatrix, false, viewMatrix.elements);
+
+  var projectionMatrix = new Matrix4();
+  gl.uniformMatrix4fv(u_ProjectionMatrix, false, projectionMatrix.elements);
+
   // rotation of matrix
-  var globalRotateM = new Matrix4().rotate(g_angle, 0, 1, 0);
+  var globalRotateM = new Matrix4().rotate(0, 0, 1, 0);
   gl.uniformMatrix4fv(u_GlobalRotateMatrix, false, globalRotateM.elements); 
 
   // Clear <canvas>
@@ -297,6 +319,7 @@ function renderScene(timestamp) {
   }
 
   drawOwl();
+  
 
   // Tutor Rohan fixed the performance issue with timestamp - 05/03/2024
   var duration = timestamp - g_start_time; 

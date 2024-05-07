@@ -32,6 +32,7 @@ function drawOwl(){
     var head = new Cube();
     // RBG target for darker yellow
     head.color = [0.5, 0.49, 0.3, 1.0];
+    head.textureNum = 0;
     head.matrix = body_coordinates;
     head.matrix.translate(0, 0.450002/4, 0.0); 
     head.matrix.translate(0, -0.07/4, 0)
@@ -119,4 +120,5 @@ function drawOwl(){
     log.matrix.translate(-0.25/1.5, -0.75/5, 0.0);
     log.matrix.scale(0.2, 0.035, 0.25/4)
     log.render();
+
  }
