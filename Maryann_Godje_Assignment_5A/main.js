@@ -23,7 +23,7 @@ function main() {
 
 	const loader = new THREE.TextureLoader();
 
-	const texture_sheep = loader.load( 'dist/sheep.jpg' );
+	const texture_sheep = loader.load( 'sheep.jpg' );
 	texture_sheep.colorSpace = THREE.SRGBColorSpace;
 
 	const color = 0xFFFFFF;
@@ -58,11 +58,11 @@ function main() {
 	function loadObj( x, y ) {
 		const mtlLoader = new MTLLoader();
 		const objLoader = new OBJLoader();
-		mtlLoader.load( 'dist/materials.mtl', ( mtl ) => {
+		mtlLoader.load( 'materials.mtl', ( mtl ) => {
 			mtl.preload();
 			mtl.wireframe = false;
 			objLoader.setMaterials( mtl );
-			objLoader.load( 'dist/model.obj', ( obj ) => {
+			objLoader.load( 'model.obj', ( obj ) => {
 				scene.add( obj );
 				// how to scale in threejs: https://threejs.org/docs/#api/en/core/Object3D.scale
 				obj.children[0].scale.set(0.5, 0.5, 0.5);
