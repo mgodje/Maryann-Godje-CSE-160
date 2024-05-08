@@ -1,3 +1,4 @@
+
 class Triangle {
   constructor() {
       this.type="triangle";
@@ -15,10 +16,6 @@ class Triangle {
       var xy = this.position;
       var rgba = this.color;
       var size = this.size;
-
-      // DON'T NEED FOR draw_triangle()
-      // Pass the position of a point to a_Position variable
-      // gl.vertexAttrib3f(a_Position, xy[0], xy[1], 0.0);
 
       // Pass the color of a point to u_FragColor variable
       gl.uniform4f(u_FragColor, rgba[0], rgba[1], rgba[2], rgba[3]);
@@ -93,7 +90,7 @@ function draw_triangle_3dUV(vertices, uv) {
   // Create a buffer object
   var vertexBuffer = gl.createBuffer();
   if (!vertexBuffer) {
-    console.log('Failed to create the buffer object');
+    console.log('Failed to create the vertexBuffer object');
     return -1;
   }
 
@@ -109,10 +106,13 @@ function draw_triangle_3dUV(vertices, uv) {
   // Enable the assignment to a_Position variable
   gl.enableVertexAttribArray(a_Position);
 
+  gl.drawArrays(gl.TRIANGLES, 0, n);
+
+  
   // Create a buffer object
   var uvBuffer = gl.createBuffer();
   if (!uvBuffer) {
-    console.log('Failed to create the buffer object');
+    console.log('Failed to create the uvBuffer object');
     return -1;
   }
 

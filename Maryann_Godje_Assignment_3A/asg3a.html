@@ -1,24 +1,23 @@
- <!-- Got help from:
+<!-- Got help from:
   1) Tutor: Rohan Venkatapuram on 04/17/2024
     - links provided:
       -  https://www.geogebra.org/calculator
       - https://people.ucsc.edu/~rnvenkat/asgn1/asgn1.html
   2) https://www.geeksforgeeks.org/html-font-tag/
   3) https://blog.hubspot.com/website/insert-image-in-html#:~:text=To%20insert%20an%20image%20in%20HTML%2C%20use%20the%20image%20tag,section%20of%20your%20HTML%20file.&text=The%20HTML%20image%20element%20is,not%20have%20a%20closing%20tag.
-  4) https://www.today.com/pets/just-because-11-pictures-chicks-hats-984489 
+  4) https://www.today.com/pets/just-because-11-pictures-chicks-hats-984489
+-->
 
-  -->
-  
-  <!DOCTYPE html>
-  <html lang="en">
-    <head>
-      <link rel="stylesheet" type="text/css" href="index.css">
-      <meta charset="utf-8" />
-      <title>CSE 160 - Assignment 3A</title>
-    </head>
-  
-    <body onload="main()">
-  
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="stylesheet" type="text/css" href="index.css">
+    <meta charset="utf-8" />
+    <title>CSE 160 - Assignment 3</title>
+  </head>
+
+  <body onload="main()">
+
     <div id="container">
       <!-- How to increase font size: https://www.geeksforgeeks.org/html-font-tag/ -->
       <font size="+2">Hey There!</font>
@@ -33,45 +32,16 @@
     <br><br>
     Camera Angle <input type="range" min="-100" max="100" value="0" class="slider" id="CameraAngle">
     <br><br>
-  
-      <script src="lib/cuon-matrix-cse160.js"></script>
-      <script src="lib/webgl-utils.js"></script>
-      <script src="lib/webgl-debug.js"></script>
-      <script src="lib/cuon-utils.js"></script>
-      <script src="Cube.js"></script>
-      <script src="Owl.js"></script>
-      <script src="Triangle.js"></script>
-      <script src="asg3a.js"></script>
-    </body>
-  </html>
 
-  <!--
-    <br><br>
-    <font size="+1">Head Block Animation ON/OFF:</font>
-    <br><br>
-    <button type="button" id="joint1_animation_ON">ON</button>
-    <button type="button" id="joint1_animation_OFF">OFF</button>
-    Head <input type="range" min="-50" max="50" value="0" class="slider" id="JointSlider1">
-    <br><br>
-
-    <font size="+1">Ears Block Animation ON/OFF:</font>
-    <br><br>
-    <button type="button" id="joint2_animation_ON">ON</button>
-    <button type="button" id="joint2_animation_OFF">OFF</button>
-    Ears <input type="range" min="-5" max="5" value="0" class="slider" id="JointSlider2">
-
-    <br><br>
-    <font size="+1">Left Wing Block Animation ON/OFF:</font>
-    <br><br>
-    <button type="button" id="joint3_animation_ON">ON</button>
-    <button type="button" id="joint3_animation_OFF">OFF</button>
-    Left Wing<input type="range" min="-5" max="5" value="0" class="slider" id="JointSlider3">
-
-    <br><br>
-    <font size="+1">Right Wing Block Animation ON/OFF:</font>
-    <br><br>
-    <button type="button" id="joint4_animation_ON">ON</button>
-    <button type="button" id="joint4_animation_OFF">OFF</button>
-    Right Wing <input type="range" min="-5" max="5" value="0" class="slider" id="JointSlider4">
-
-  -->
+    <script src="lib/cuon-matrix-cse160.js"></script>
+    <script src="lib/webgl-utils.js"></script>
+    <script src="lib/webgl-debug.js"></script>
+    <script src="lib/cuon-utils.js"></script>
+    <script src="Triangle.js"></script>
+    <script src="Circle.js"></script>
+    <script src="Point.js"></script>
+    <script src="Cube.js"></script>
+    <script src="Owl.js"></script>
+    <script src="asg3a.js"></script>
+  </body>
+</html>

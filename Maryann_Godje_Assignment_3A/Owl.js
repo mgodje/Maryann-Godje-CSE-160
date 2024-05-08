@@ -32,11 +32,10 @@ function drawOwl(){
     var head = new Cube();
     // RBG target for darker yellow
     head.color = [0.5, 0.49, 0.3, 1.0];
-    head.textureNum = 0;
     head.matrix = body_coordinates;
     head.matrix.translate(0, 0.450002/4, 0.0); 
     head.matrix.translate(0, -0.07/4, 0)
-    head.matrix.rotate(0, 0, 0, 1);                       // -g.joint1
+    head.matrix.rotate(0, 0, 0, 1);                     // -g_joint1
     //box.matrix.translate(-0.25, 0.0, 0.0);
     head.matrix.translate(0, 0.07/4, 0)
     var head_coordinates1 = new Matrix4(head.matrix);
@@ -48,7 +47,7 @@ function drawOwl(){
     right_ear.color = [0.5, 0.39, 0.32, 1.0];
     right_ear.matrix = head_coordinates1;
     right_ear.matrix.translate(-0.05, 0.05, 0.0);
-    right_ear.matrix.rotate(0, 0, 0, 1);           // -g.joint2
+    right_ear.matrix.rotate(0, 0, 0, 1);                // -g_joint2
     right_ear.matrix.translate(0.15, 0.05, 0.0);
     right_ear_coordinates = new Matrix4(right_ear.matrix);
     right_ear.matrix.scale(0.03, 0.15, 0.05);
@@ -59,7 +58,7 @@ function drawOwl(){
     left_ear.color = [0.5, 0.39, 0.32, 1.0];
     left_ear.matrix = right_ear_coordinates;
     left_ear.matrix.translate(0.05, -0.05, 0.0);
-    left_ear.matrix.rotate(0, 0, 0, 1);          // -g.joint2
+    left_ear.matrix.rotate(0, 0, 0, 1);                 // -g_joint2
     left_ear.matrix.translate(-.25, 0.05, 0.0);
     var left_ear_coordinates = new Matrix4(left_ear.matrix);    
     left_ear.matrix.scale(0.03, 0.15, 0.05);
@@ -97,7 +96,7 @@ function drawOwl(){
     var left_wing = new Cube(); 
     left_wing.color = [0.6, 0.59, 0.4, 1.0];
     left_wing.matrix.translate(0.07, 0, 0.0);
-    left_wing.matrix.rotate(0, 0, 0, 1);              // -g.joint3
+    left_wing.matrix.rotate(0, 0, 0, 1);                    // -g_joint3
     left_wing.matrix.translate(-0.25, -0.15, 0.0);
     left_wing.matrix.scale(0.03, .08, 0.07)
     left_wing.render();
@@ -106,7 +105,7 @@ function drawOwl(){
     var left_wing = new Cube(); 
     left_wing.color = [0.6, 0.59, 0.4, 1.0];
     left_wing.matrix.translate(0.07, 0, 0.0);
-    left_wing.matrix.rotate(0, 0, 0, 1);              // -g.joint4
+    left_wing.matrix.rotate(0, 0, 0, 1);                    // -g_joint4
     left_wing.matrix.translate(-0.01, -0.15, 0.0);
     left_wing.matrix.scale(0.03, .08, 0.07)
     left_wing.render();
@@ -120,5 +119,4 @@ function drawOwl(){
     log.matrix.translate(-0.25/1.5, -0.75/5, 0.0);
     log.matrix.scale(0.2, 0.035, 0.25/4)
     log.render();
-
  }
