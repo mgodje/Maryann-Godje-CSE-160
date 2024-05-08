@@ -18,9 +18,21 @@ var FSHADER_SOURCE = `
   precision mediump float;
   varying vec2 v_UV;
   uniform vec4 u_FragColor;
+  uniform sampler2D u_Sampler1;
+  uniform int u_whichTexture;
   void main() {
-    gl_FragColor = u_FragColor;
-    gl_FragColor = vec4(v_UV, 1.0, 1.0);
+    if (u_whichTexture == -2) {
+      gl_FragColor = u_FragColor;
+    }
+    else if (u_whichTexture == -1) {
+      gl_FragColor = vec4(v_UV, 1.0, 1.0); 
+    }
+    else if (u_whichTexture == 0) {
+      gl_FragColor = texture2D(u_Sampler1, v_UV);
+    }
+    else {
+      gl_FragColor = vec4(1.0, 0.2, 0.2, 1.0);
+    }
   }`
 
 // constant vars
@@ -37,6 +49,8 @@ let u_GlobalRotateMatrix;
 let u_Size;
 let u_ViewMatrix;
 let u_ProjectionMatrix;
+let u_Sampler1;
+let u_whichTexture;
 
 // Global vars
 let gl;
@@ -47,6 +61,7 @@ let g_selected_type = POINT;
 let g_selected_segments = 10;
 var g_seconds = 0;  
 var g_start_time;
+var g_angle = 0;
 var viewMatrix = new Matrix4();
 var projectionMatrix = new Matrix4();
 var globalRotateM = new Matrix4();
@@ -142,6 +157,18 @@ function connect_vars_to_GLSL() {
       return;
     }
 
+    u_Sampler1 = gl.getUniformLocation(gl.program, 'u_Sampler1');
+    if (!u_Sampler1) {
+      console.log('Failed to get the storage location of u_Sampler1');
+      return;
+    }
+
+    u_whichTexture = gl.getUniformLocation(gl.program, 'u_whichTexture');
+    if (!u_whichTexture) {
+      console.log('Failed to get the storage location of u_whichTexture');
+      return;
+    }
+
     var identityM = new Matrix4();
     gl.uniformMatrix4fv(u_ModelMatrix, false, identityM.elements);
 }
@@ -152,13 +179,7 @@ function html_actions() {
   document.getElementById('CameraAngle').addEventListener('mousemove', function() {
     g_angle = this.value;
     renderScene();
-  })
-
-  document.getElementById('CameraAngle').addEventListener('mousemove', function() {
-    g_angle = this.value;
-    renderScene();
-  })
-
+  });
 }
 
 function xy_coordinate_covert_to_GL(ev) {
@@ -172,16 +193,67 @@ function xy_coordinate_covert_to_GL(ev) {
   return([x, y]);
 }
 
+function initTextures() {
+
+  // Create the image object
+  var image = new Image();
+  if (!image) {
+    console.log('Failed to create the image object');
+    return false;
+  }
+  // Register the event handler to be called when image loading is completed
+  image.onload = function(){ sendTextureToGLSL(image); };
+  // Tell the browser to load an Image
+  image.src = 'fried_chicken.jpg';
+
+  return true;
+}
+
+function sendTextureToGLSL(image) {
+  // Create a texture object
+  var texture = gl.createTexture();
+  if (!texture) {
+    console.log('Failed to create the texture object');
+    return false;
+  }
+  
+  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);  // Flip the image's y axis
+  // Activate texture unit0
+  gl.activeTexture(gl.TEXTURE0);
+  // Bind the texture object to the target
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+
+  // Set the texture parameter
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+  // Set the image to texture
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
+  
+  // Set the texture unit 0 to the sampler
+  gl.uniform1i(u_Sampler1, 0);
+  
+  // Clear <canvas>
+  //gl.clear(gl.COLOR_BUFFER_BIT);
+
+  // Draw the rectangle
+  //gl.drawArrays(gl.TRIANGLE_STRIP, 0, n);
+}
+
+var g_eye = [0, 0, -1];
+var g_at = [0, 0, 100];
+var g_up = [0, 1, 0];
+
 function renderScene(timestamp) {
 
   viewMatrix.setIdentity();
+  viewMatrix.setLookAt(g_eye[0], g_eye[1], g_eye[2], g_at[0], g_at[1], g_at[2], g_up[0], g_up[1], g_up[2]);
   gl.uniformMatrix4fv(u_ViewMatrix, false, viewMatrix.elements);
 
   projectionMatrix.setIdentity();
+  projectionMatrix.setPerspective(90, canvas.width/canvas.height, .1, 100);
   gl.uniformMatrix4fv(u_ProjectionMatrix, false, projectionMatrix.elements);
 
   // rotation of matrix
-  globalRotateM.setIdentity().rotate(0, 0, 1, 0);
+  globalRotateM.setIdentity().rotate(g_angle, 0, 1, 0);
   gl.uniformMatrix4fv(u_GlobalRotateMatrix, false, globalRotateM.elements); 
 
   // Clear <canvas>
@@ -213,7 +285,6 @@ function duration_performance(text, htmlID) {
   }
   html_element.innerHTML = text;
 }
-
 
 function tick(timestamp) {
   g_seconds = performance.now() / 1000 - g_start_time;
