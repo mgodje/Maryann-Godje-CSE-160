@@ -263,12 +263,6 @@ function sendTextureToGLSL(image) {
   else {
     gl.uniform1i(u_Sampler2, 1);
   }
-  
-  // Clear <canvas>
-  //gl.clear(gl.COLOR_BUFFER_BIT);
-
-  // Draw the rectangle
-  //gl.drawArrays(gl.TRIANGLE_STRIP, 0, n);
 }
 
 var g_eye = [0, 0, -1];
@@ -277,6 +271,7 @@ var g_up = [0, 1, 0];
 
 function renderScene(timestamp) {
 
+  // Tutor Jacob showed how to use setIdentity() - 05/07/2024
   viewMatrix.setIdentity();
   viewMatrix.setLookAt(g_eye[0], g_eye[1], g_eye[2], g_at[0], g_at[1], g_at[2], g_up[0], g_up[1], g_up[2]);
   gl.uniformMatrix4fv(u_ViewMatrix, false, viewMatrix.elements);

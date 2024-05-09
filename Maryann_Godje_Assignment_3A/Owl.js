@@ -48,7 +48,7 @@ function drawOwl(){
     // right ear
     var right_ear = new Cube();
     right_ear.color = [0.5, 0.39, 0.32, 1.0];
-    right_ear.textureNum = -2;
+    right_ear.textureNum = -1;
     right_ear.matrix = head_coordinates1;
     right_ear.matrix.translate(-0.05, 0.05, 0.0);
     right_ear.matrix.rotate(0, 0, 0, 1);                // -g_joint2
@@ -60,7 +60,7 @@ function drawOwl(){
     // left ear
     var left_ear = new Cube();
     left_ear.color = [0.5, 0.39, 0.32, 1.0];
-    left_ear.textureNum = -2;
+    left_ear.textureNum = -1;
     left_ear.matrix = right_ear_coordinates;
     left_ear.matrix.translate(0.05, -0.05, 0.0);
     left_ear.matrix.rotate(0, 0, 0, 1);                 // -g_joint2
@@ -124,7 +124,7 @@ function drawOwl(){
     var log = new Cube();
     // RGB target for brown - 66, 50, 21
     log.color = [0.3, 0.19, 0.12, 1.0];
-    log.textureNum = -1;
+    log.textureNum = -2;
     log.matrix.translate(.225, 0, 0);
     log.matrix.translate(-0.25/2, -0.75/4, 0.0);
     log.matrix.translate(-0.25/1.5, -0.75/5, 0.0);
