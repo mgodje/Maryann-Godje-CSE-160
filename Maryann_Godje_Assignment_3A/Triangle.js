@@ -108,7 +108,6 @@ function draw_triangle_3dUV(vertices, uv) {
 
   gl.drawArrays(gl.TRIANGLES, 0, n);
 
-  
   // Create a buffer object
   var uvBuffer = gl.createBuffer();
   if (!uvBuffer) {

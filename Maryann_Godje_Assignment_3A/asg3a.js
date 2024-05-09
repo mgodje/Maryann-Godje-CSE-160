@@ -19,6 +19,7 @@ var FSHADER_SOURCE = `
   varying vec2 v_UV;
   uniform vec4 u_FragColor;
   uniform sampler2D u_Sampler1;
+  uniform sampler2D u_Sampler2;
   uniform int u_whichTexture;
   void main() {
     if (u_whichTexture == -2) {
@@ -30,6 +31,8 @@ var FSHADER_SOURCE = `
     else if (u_whichTexture == 0) {
       gl_FragColor = texture2D(u_Sampler1, v_UV);
     }
+    else if (u_whichTexture == 1) {
+      gl_FragColor = texture2D(u_Sampler2, v_UV); }
     else {
       gl_FragColor = vec4(1.0, 0.2, 0.2, 1.0);
     }
@@ -50,6 +53,7 @@ let u_Size;
 let u_ViewMatrix;
 let u_ProjectionMatrix;
 let u_Sampler1;
+let u_Sampler2;
 let u_whichTexture;
 
 // Global vars
@@ -81,6 +85,8 @@ function main() {
       click(ev);
     }
    };
+
+   initTextures();
 
   // Specify the color for clearing <canvas>
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
@@ -163,6 +169,12 @@ function connect_vars_to_GLSL() {
       return;
     }
 
+    u_Sampler2 = gl.getUniformLocation(gl.program, 'u_Sampler2');
+    if (!u_Sampler2) {
+      console.log('Failed to get the storage location of u_Sampler2');
+      return;
+    }
+
     u_whichTexture = gl.getUniformLocation(gl.program, 'u_whichTexture');
     if (!u_whichTexture) {
       console.log('Failed to get the storage location of u_whichTexture');
@@ -196,15 +208,25 @@ function xy_coordinate_covert_to_GL(ev) {
 function initTextures() {
 
   // Create the image object
-  var image = new Image();
-  if (!image) {
+  var image1 = new Image();
+  if (!image1) {
     console.log('Failed to create the image object');
     return false;
   }
+
+  var image2 = new Image();
+  if (!image2) {
+    console.log('Failed to create the image object');
+    return false;
+  }
+
   // Register the event handler to be called when image loading is completed
-  image.onload = function(){ sendTextureToGLSL(image); };
+  image1.onload = function(){ sendTextureToGLSL(image1); };
+  image2.onload = function(){ sendTextureToGLSL(image2); };
+  
   // Tell the browser to load an Image
-  image.src = 'fried_chicken.jpg';
+  image1.src = './fried_chicken_256.jpg';
+  image2.src = './star.png';
 
   return true;
 }
@@ -219,7 +241,12 @@ function sendTextureToGLSL(image) {
   
   gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);  // Flip the image's y axis
   // Activate texture unit0
-  gl.activeTexture(gl.TEXTURE0);
+  if (image.src.includes("fried_chicken_256.jpg")) {
+    gl.activeTexture(gl.TEXTURE0);
+  }
+  else {
+    gl.activeTexture(gl.TEXTURE1);
+  }
   // Bind the texture object to the target
   gl.bindTexture(gl.TEXTURE_2D, texture);
 
@@ -229,7 +256,13 @@ function sendTextureToGLSL(image) {
   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
   
   // Set the texture unit 0 to the sampler
-  gl.uniform1i(u_Sampler1, 0);
+  
+  if (image.src.includes("fried_chicken_256.jpg")) {
+     gl.uniform1i(u_Sampler1, 0);
+  }
+  else {
+    gl.uniform1i(u_Sampler2, 1);
+  }
   
   // Clear <canvas>
   //gl.clear(gl.COLOR_BUFFER_BIT);
@@ -263,6 +296,7 @@ function renderScene(timestamp) {
   //draw_triangle_3d([-1.0, 0.0, 0.0, -0.5, -1.0, 0.0, 0.0, 0.0, 0.0])
 
   drawOwl();
+  drawFloorandSky();
 
   var len = g_Point_list.length;
   for(var i = 0; i < len; i++) {
