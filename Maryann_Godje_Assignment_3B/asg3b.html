@@ -1,0 +1,46 @@
+<!-- Got help from:
+  1) Tutor Rohan on 5/3/24 and 5/8/24 
+    - 5/3/24 - He showed me how to use a .css file and fixed my performance issue
+    - 5/8/24 - He helped me with my textures not laoding
+  2) Tutor Jacob on 5/7/24
+    - He showed me how to define a matrix using setIdentity()
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Tutor Rohan showed me how to use a .css file to center my work - 5/3/24 -->
+    <link rel="stylesheet" type="text/css" href="index.css">
+    <meta charset="utf-8" />
+    <title>CSE 160 - Assignment 3</title>
+  </head>
+
+  <body onload="main()">
+    <div id="container">
+      <!-- How to increase font size: https://www.geeksforgeeks.org/html-font-tag/ -->
+      <font size="+2">Hey There!</font>
+      
+      <p id="numdot">Performance will run here...</p>
+        <canvas id="webgl" width="600" height="600">
+        </canvas>
+
+        <br><br>
+        <font size="+1">Camera Angle:</font>
+        <br><br>
+        Camera Angle <input type="range" min="-100" max="100" value="0" class="slider" id="CameraAngle">
+        <br><br>
+    </div>
+
+    <script src="lib/cuon-matrix-cse160.js"></script>
+    <script src="lib/webgl-utils.js"></script>
+    <script src="lib/webgl-debug.js"></script>
+    <script src="lib/cuon-utils.js"></script>
+    <script src="Triangle.js"></script>
+    <script src="Circle.js"></script>
+    <script src="Point.js"></script>
+    <script src="Cube.js"></script>
+    <script src="Owl.js"></script>
+    <script src="Scene.js"></script>
+    <script src="asg3b.js"></script>
+  </body>
+</html>
