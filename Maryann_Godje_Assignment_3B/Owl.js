@@ -34,6 +34,7 @@ function drawOwl(){
     var head = new Cube();
     // RBG target for darker yellow
     head.color = [0.5, 0.49, 0.3, 1.0];
+    // https://www.roomandboard.com/catalog/home-decor/solid-pillows/sheepskin-pillows
     head.textureNum = -2;
     head.matrix = body_coordinates;
     head.matrix.translate(0, 0.450002/4, 0.0); 
@@ -113,6 +114,7 @@ function drawOwl(){
     // right wing
     var right_wing = new Cube(); 
     right_wing.color = [0.6, 0.59, 0.4, 1.0];
+    // https://www.the3rdsequence.com/texturedb/texture/29/fur/
     right_wing.textureNum = -2;
     right_wing.matrix.translate(0.07, 0, 0.0);
     right_wing.matrix.rotate(0, 0, 0, 1);                    // -g_joint4
@@ -124,7 +126,8 @@ function drawOwl(){
     var log = new Cube();
     // RGB target for brown - 66, 50, 21
     log.color = [0.3, 0.19, 0.12, 1.0];
-    log.textureNum = -2;
+    // https://www.arroway-textures.ch/products/wood-125/
+    log.textureNum = 3;
     log.matrix.translate(.225, 0, 0);
     log.matrix.translate(-0.25/2, -0.75/4, 0.0);
     log.matrix.translate(-0.25/1.5, -0.75/5, 0.0);

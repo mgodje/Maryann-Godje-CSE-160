@@ -20,6 +20,10 @@ var FSHADER_SOURCE = `
   uniform vec4 u_FragColor;
   uniform sampler2D u_Sampler1;
   uniform sampler2D u_Sampler2;
+  uniform sampler2D u_Sampler3; 
+  uniform sampler2D u_Sampler4;
+  uniform sampler2D u_Sampler5;
+  uniform sampler2D u_Sampler6;
   uniform int u_whichTexture;
   void main() {
     if (u_whichTexture == -2) {
@@ -33,6 +37,14 @@ var FSHADER_SOURCE = `
     }
     else if (u_whichTexture == 1) {
       gl_FragColor = texture2D(u_Sampler2, v_UV); }
+    else if (u_whichTexture == 2) {
+        gl_FragColor = texture2D(u_Sampler3, v_UV); }
+    else if (u_whichTexture == 3) {
+          gl_FragColor = texture2D(u_Sampler4, v_UV); }
+    else if (u_whichTexture == 4) {
+      gl_FragColor = texture2D(u_Sampler5, v_UV); }
+    else if (u_whichTexture == 5) {
+      gl_FragColor = texture2D(u_Sampler6, v_UV); }
     else {
       gl_FragColor = vec4(1.0, 0.2, 0.2, 1.0);
     }
@@ -54,6 +66,10 @@ let u_ViewMatrix;
 let u_ProjectionMatrix;
 let u_Sampler1;
 let u_Sampler2;
+let u_Sampler3;
+let u_Sampler4;
+let u_Sampler5;
+let u_Sampler6;
 let u_whichTexture;
 
 // Global vars
@@ -70,6 +86,7 @@ var viewMatrix = new Matrix4();
 var projectionMatrix = new Matrix4();
 var globalRotateM = new Matrix4();
 var g_Point_list = [];
+var g_camera;
 
 function main() {
 
@@ -77,6 +94,22 @@ function main() {
   connect_vars_to_GLSL();
 
   html_actions();
+
+  g_camera = new Camera();
+  document.onkeydown = function(ev) {
+      if (ev.key == 65) { // A
+        g_camera.left(); }
+      else if (ev.key== 83) { // S
+        g_camera.back(); }
+      else if (ev.key == 87) { // W
+        g_camera.forward(); }
+      else if (ev.key == 68) { // D
+        g_camera.right(); }
+      else if (ev.key == 81) { // Q
+        g_camera.panLeft(); }
+      else if (ev.key == 69) { // E
+        g_camera.panRight(); }
+    };
 
   // Register function (event handler) to be called on a mouse press
   canvas.onmousedown = click;
@@ -175,6 +208,30 @@ function connect_vars_to_GLSL() {
       return;
     }
 
+    u_Sampler3 = gl.getUniformLocation(gl.program, 'u_Sampler3');
+    if (!u_Sampler3) {
+      console.log('Failed to get the storage location of u_Sampler3');
+      return;
+    }
+
+    u_Sampler4 = gl.getUniformLocation(gl.program, 'u_Sampler4');
+    if (!u_Sampler4) {
+      console.log('Failed to get the storage location of u_Sampler4');
+      return;
+    }
+
+    u_Sampler5 = gl.getUniformLocation(gl.program, 'u_Sampler5');
+    if (!u_Sampler5) {
+      console.log('Failed to get the storage location of u_Sampler5');
+      return;
+    }
+
+    u_Sampler6 = gl.getUniformLocation(gl.program, 'u_Sampler6');
+    if (!u_Sampler6) {
+      console.log('Failed to get the storage location of u_Sampler6');
+      return;
+    }
+
     u_whichTexture = gl.getUniformLocation(gl.program, 'u_whichTexture');
     if (!u_whichTexture) {
       console.log('Failed to get the storage location of u_whichTexture');
@@ -210,23 +267,55 @@ function initTextures() {
   // Create the image object
   var image1 = new Image();
   if (!image1) {
-    console.log('Failed to create the image object');
+    console.log('Failed to create the fried chicken image object');
     return false;
   }
 
   var image2 = new Image();
   if (!image2) {
-    console.log('Failed to create the image object');
+    console.log('Failed to create the star image object');
+    return false;
+  }
+
+  var image3 = new Image();
+  if (!image3) {
+    console.log('Failed to create the blue jay image object');
+    return false;
+  }
+
+  var image4 = new Image();
+  if (!image4) {
+    console.log('Failed to create the blue jay image object');
+    return false;
+  }
+  
+  var image5 = new Image();
+  if (!image5) {
+    console.log('Failed to create the blue jay image object');
+    return false;
+  }
+  
+  var image6 = new Image();
+  if (!image6) {
+    console.log('Failed to create the blue jay image object');
     return false;
   }
 
   // Register the event handler to be called when image loading is completed
   image1.onload = function(){ sendTextureToGLSL(image1); };
   image2.onload = function(){ sendTextureToGLSL(image2); };
+  image3.onload = function(){ sendTextureToGLSL(image3); };
+  image4.onload = function(){ sendTextureToGLSL(image4); };
+  image5.onload = function(){ sendTextureToGLSL(image5); };
+  image6.onload = function(){ sendTextureToGLSL(image6); };
   
   // Tell the browser to load an Image
   image1.src = './fried_chicken_256.jpg';
   image2.src = './star.png';
+  image3.src = './grass.jpg';
+  image4.src = './wood.jpg';
+  image5.src = './fur1.jpg';
+  image6.src = './fur2.jpg';
 
   return true;
 }
@@ -244,9 +333,22 @@ function sendTextureToGLSL(image) {
   if (image.src.includes("fried_chicken_256.jpg")) {
     gl.activeTexture(gl.TEXTURE0);
   }
-  else {
+  else if (image.src.includes("star.png")) {
     gl.activeTexture(gl.TEXTURE1);
   }
+  else if (image.src.includes("grass.jpg")) {
+    gl.activeTexture(gl.TEXTURE2);
+  }
+  else if (image.src.includes("wood.jpg")) {
+    gl.activeTexture(gl.TEXTURE3);
+  }
+  else if (image.src.includes("fur1.jpg")) {
+    gl.activeTexture(gl.TEXTURE4);
+  }
+  else {
+    gl.activeTexture(gl.TEXTURE5);
+  }
+
   // Bind the texture object to the target
   gl.bindTexture(gl.TEXTURE_2D, texture);
 
@@ -255,13 +357,24 @@ function sendTextureToGLSL(image) {
   // Set the image to texture
   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
   
-  // Set the texture unit 0 to the sampler
-  
+  // Set the texture units 0, 1, or 2 to the sampler
   if (image.src.includes("fried_chicken_256.jpg")) {
      gl.uniform1i(u_Sampler1, 0);
   }
-  else {
+  else if (image.src.includes("star.png")) {
     gl.uniform1i(u_Sampler2, 1);
+  }
+  else if (image.src.includes("grass.jpg")) {
+    gl.uniform1i(u_Sampler3, 2);
+  }
+  else if (image.src.includes("wood.jpg")) {
+    gl.uniform1i(u_Sampler4, 3);
+  }
+  else if (image.src.includes("fur1.jpg")) {
+    gl.uniform1i(u_Sampler5, 4);
+  }
+  else {
+    gl.uniform1i(u_Sampler6, 5);
   }
 }
 
