@@ -97,17 +97,18 @@ function main() {
 
   g_camera = new Camera();
   document.onkeydown = function(ev) {
-      if (ev.key == 65) { // A
-        g_camera.left(); }
-      else if (ev.key== 83) { // S
-        g_camera.back(); }
-      else if (ev.key == 87) { // W
-        g_camera.forward(); }
-      else if (ev.key == 68) { // D
-        g_camera.right(); }
-      else if (ev.key == 81) { // Q
+      console.log(ev.key);
+      if (ev.key == 'a' || ev.key == 'ArrowLeft') { // A
+        g_camera.moveLeft(); }
+      else if (ev.key == 's' || ev.key == 'ArrowDown') { // S
+        g_camera.moveBackward(); }
+      else if (ev.key == 'w' || ev.key == 'ArrowUp') { // W
+        g_camera.moveForward(); }
+      else if (ev.key == 'd' || ev.key == 'ArrowRight') { // D
+        g_camera.moveRight(); }
+      else if (ev.key == 'q') { // Q
         g_camera.panLeft(); }
-      else if (ev.key == 69) { // E
+      else if (ev.key == 'e') { // E
         g_camera.panRight(); }
     };
 
@@ -387,7 +388,7 @@ function renderScene(timestamp) {
   // Tutor Jacob showed how to use setIdentity() - 05/07/2024
   viewMatrix.setIdentity();
   viewMatrix.setLookAt(g_eye[0], g_eye[1], g_eye[2], g_at[0], g_at[1], g_at[2], g_up[0], g_up[1], g_up[2]);
-  gl.uniformMatrix4fv(u_ViewMatrix, false, viewMatrix.elements);
+  gl.uniformMatrix4fv(u_ViewMatrix, false, g_camera.viewMatrix.elements);
 
   projectionMatrix.setIdentity();
   projectionMatrix.setPerspective(90, canvas.width/canvas.height, .1, 100);
