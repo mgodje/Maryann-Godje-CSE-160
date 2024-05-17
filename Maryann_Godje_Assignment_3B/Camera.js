@@ -27,7 +27,7 @@ class Camera{
        look.set(this.at);
        look.sub(this.eye);
        look.normalize();
-       look.mul(0.1);
+       look.mul(0.2);
        this.eye.add(look);
        this.at.add(look);
        this.updateView();
@@ -38,7 +38,7 @@ class Camera{
        look.set(this.at);
        look.sub(this.eye);
        look.normalize();
-       look.mul(-0.1);
+       look.mul(-0.2);
        this.eye.add(look);
        this.at.add(look);
        this.updateView();
@@ -51,7 +51,7 @@ class Camera{
        look = Vector3.cross(look, this.up);
        //look.cross(this.up);
        look.normalize();
-       look.mul(0.1);
+       look.mul(0.2);
        this.eye.add(look);
        this.at.add(look);
        this.updateView();
@@ -64,7 +64,7 @@ class Camera{
        look = Vector3.cross(look, this.up);
        //look.cross(this.up);
        look.normalize();
-       look.mul(-0.1);
+       look.mul(-0.2);
        this.eye.add(look);
        this.at.add(look);
        this.updateView();
