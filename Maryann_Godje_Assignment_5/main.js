@@ -25,7 +25,7 @@ function main() {
 
 	const loader = new THREE.TextureLoader();
 
-	const texture_sheep = loader.load( 'sheep.jpg' );
+	const texture_sheep = loader.load( './sheep.jpg' );
 	texture_sheep.colorSpace = THREE.SRGBColorSpace;
 
 	// set up cube dimensions
@@ -70,19 +70,18 @@ function main() {
 
 	// Point light
 	const pointLight = new THREE.PointLight(0xff9000, 1.5)
-	pointLight.position.set(1, -.5, 1)
+	pointLight.position.set(0.5, -.5, 0.5)
 	scene.add(pointLight)
 
-	
 	// Tutor Rohan helped me reoragnize this function (04/24/2024)
 	function loadObj( x, y ) {
 		const mtlLoader = new MTLLoader();
 		const objLoader = new OBJLoader();
-		mtlLoader.load( 'materials.mtl', ( mtl ) => {
+		mtlLoader.load( './materials.mtl', ( mtl ) => {
 			mtl.preload();
 			mtl.wireframe = false;
 			objLoader.setMaterials( mtl );
-			objLoader.load( 'model.obj', ( obj ) => {
+			objLoader.load( './model.obj', ( obj ) => {
 				scene.add( obj );
 				// how to scale in threejs: https://threejs.org/docs/#api/en/core/Object3D.scale
 				obj.children[0].scale.set(0.5, 0.5, 0.5);
