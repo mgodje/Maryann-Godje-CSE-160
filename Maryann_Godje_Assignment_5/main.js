@@ -29,9 +29,9 @@ function main() {
 	texture_sheep.colorSpace = THREE.SRGBColorSpace;
 
 	// set up cube dimensions
-	let boxWidth = 0.5;
-	let boxHeight = 0.5;
-	let boxDepth = 0.5;
+	let boxWidth = 0.1;
+	let boxHeight = 0.1;
+	let boxDepth = 0.1;
 
 	// set up sphere dimensions
 	let sphereRadius = 0.5;
@@ -39,9 +39,9 @@ function main() {
 	let sphereHeight = 32;
 
 	// set up cylinder dimensions
-	let cylinderTopRadius = 0.75;
-	let cylinderBottomRadius = 0.75;
-	let cylinderHeight = 0.75;
+	let cylinderTopRadius = 0.5;
+	let cylinderBottomRadius = 0.5;
+	let cylinderHeight = 0.5;
 	let cylinderRadialSegments = 32;
 
 	const geometry_cube = new THREE.BoxGeometry( boxWidth, boxHeight, boxDepth );
@@ -70,7 +70,7 @@ function main() {
 
 	// Point light
 	const pointLight = new THREE.PointLight(0xff9000, 1.5)
-	pointLight.position.set(0.5, -.5, 0.5)
+	pointLight.position.set(0, 0, 0.5)
 	scene.add(pointLight)
 
 	// Tutor Rohan helped me reoragnize this function (04/24/2024)
@@ -91,14 +91,14 @@ function main() {
 		} );
 	}
 
-	function makeCube( geometry, color, x ) {
+	function makeShape( geometry, color, x ) {
 		const material = new THREE.MeshPhongMaterial( { color } );
-		const cube = new THREE.Mesh( geometry, material );
-		scene.add( cube );
+		const shape = new THREE.Mesh( geometry, material );
+		scene.add( shape );
 
-		cube.position.x = x;
+		shape.position.x = x;
 
-		return cube;
+		return shape;
 	}
 
 	function texturedSheep( geometry, texture_sheep, x ) {
@@ -126,10 +126,33 @@ function main() {
 	}*/
 
 	const shapes = [
-		makeCube( geometry_cube, 0x44aa88, 2),
-		texturedSheep( geometry_sphere, texture_sheep, - 2 ),
-		// RGB: https://www.rapidtables.com/web/color/RGB_Color.html
-		makeCube( geometry_cylinder, 0xDEA2FF, 0 ),
+		texturedSheep( geometry_sphere, texture_sheep, - 2 ),				//1
+		// RGB: https://www.rapidtables.com/web/color/RGB_Color.html	
+		// ctrl + shift + L to change name all at once
+		makeShape( geometry_cylinder, 0xDEA2FF, 0 ),						//2
+		makeShape( geometry_cube, 0x44aa88, 1),								//3
+		makeShape( geometry_cube, 0xFFFFFF, 1.1),							//4
+		makeShape( geometry_cube, 0x0011FF, 1.2),							//5
+		makeShape( geometry_cube, 0x65db6f, 1.3),							//6
+		makeShape( geometry_cube, 0xd71fde, 1.4),							//7
+		makeShape( geometry_cube, 0xf0f71b, 1.5),							//8
+		makeShape( geometry_cube, 0xcf850e, 1.6),							//9
+		makeShape( geometry_cube, 0x0e41cf, 1.7),							//10
+		makeShape( geometry_cube, 0x859ad6, 1.8),							//11
+		makeShape( geometry_cube, 0x11F111, 1.9),							//12
+		makeShape( geometry_cube, 0x5819a6, 2 ),							//13
+		makeShape( geometry_cube, 0x9dcee3, 2.1 ),							//14		
+		makeShape( geometry_cube, 0x1495cc, 2.2 ),							//15	
+		makeShape( geometry_cube, 0xcc1414, 2.3 ),							//16
+		makeShape( geometry_cube, 0xa732cf, 2.4 ),							//17
+		makeShape( geometry_cube, 0x9dcf32, 2.5 ),							//18
+		makeShape( geometry_cube, 0xb3b5b0, 2.6 ),							//19
+		makeShape( geometry_cube, 0xa985d6, 2.7 ),							//20
+		makeShape( geometry_cube, 0x8dd685, 2.8),							//21
+		makeShape( geometry_cube, 0xd0d406, 2.9 ),							//22
+		makeShape( geometry_cube, 0xAA8844, 3 ),							//23
+		makeShape( geometry_cylinder, 0xDEFF00, -0.3),						//24
+		makeShape( geometry_cylinder, 0xFFA200, 0.3),						//25
 	];
 	// because loadObj doesn't return anything, we can't add it to the shapes array
 	// Tutor Rohan (04/24/2024)
