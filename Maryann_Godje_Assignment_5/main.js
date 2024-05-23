@@ -1,7 +1,10 @@
 import * as THREE from "three";
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
-import {MTLLoader} from 'three/addons/loaders/MTLLoader.js';
+import { MTLLoader } from 'three/addons/loaders/MTLLoader.js';
+// import GUI from 'lil-gui'
+
+// const gui = new GUI()
 
 function main() {
 	const canvas = document.querySelector( '#c' );
@@ -19,18 +22,11 @@ function main() {
 	controls.update();
 
 	const scene = new THREE.Scene();
-	// scene.background = new THREE.Color( 'black' );
 
 	const loader = new THREE.TextureLoader();
 
 	const texture_sheep = loader.load( 'sheep.jpg' );
 	texture_sheep.colorSpace = THREE.SRGBColorSpace;
-
-	const color = 0xFFFFFF;
-	const intensity = 3;
-	const light = new THREE.DirectionalLight( color, intensity );
-	light.position.set( - 1, 2, 4 );
-	scene.add( light );
 
 	// set up cube dimensions
 	let boxWidth = 0.5;
@@ -54,6 +50,30 @@ function main() {
 	// how to generate a cylinder: https://threejs.org/docs/#api/en/geometries/CylinderGeometry
 	const geometry_cylinder = new THREE.CylinderGeometry(cylinderTopRadius, cylinderBottomRadius, cylinderHeight, cylinderRadialSegments);
 
+	/* 
+		Lights
+	*/
+	// Directional Light
+	const color = 0xFFFFFF;
+	const intensity = 3;
+	const light = new THREE.DirectionalLight( color, intensity );
+	light.position.set( - 1, 2, 4 );
+	scene.add( light );
+
+	// Ambient Light
+	const ambientLight = new THREE.AmbientLight(0xffffff, 1)
+	scene.add(ambientLight)
+
+	// Hemisphere light
+	const hemishpereLight = new THREE.HemisphereLight(0xff0000, 0x0000ff, 0.9)
+	scene.add(hemishpereLight)
+
+	// Point light
+	const pointLight = new THREE.PointLight(0xff9000, 1.5)
+	pointLight.position.set(1, -.5, 1)
+	scene.add(pointLight)
+
+	
 	// Tutor Rohan helped me reoragnize this function (04/24/2024)
 	function loadObj( x, y ) {
 		const mtlLoader = new MTLLoader();
