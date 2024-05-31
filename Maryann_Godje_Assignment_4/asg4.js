@@ -7,6 +7,7 @@ var VSHADER_SOURCE = `
   attribute vec3 a_Normal;
   varying vec2 v_UV;
   varying vec3 v_Normal;
+  varying vec4 v_vertPosition;
   uniform mat4 u_ModelMatrix;
   uniform mat4 u_GlobalRotateMatrix;
   uniform mat4 u_ViewMatrix;
@@ -15,6 +16,7 @@ var VSHADER_SOURCE = `
     gl_Position = u_ProjectionMatrix * u_ViewMatrix * u_GlobalRotateMatrix * u_ModelMatrix * a_Position;
     v_UV = a_UV;
     v_Normal = a_Normal;
+    v_vertPosition = u_ModelMatrix * a_Position;
   }`
 
 // Fragment shader program
@@ -28,6 +30,8 @@ var FSHADER_SOURCE = `
   uniform sampler2D u_Sampler3; 
   uniform sampler2D u_Sampler4;
   uniform int u_whichTexture;
+  uniform vec3 u_LightPosition;
+  varying vec4 v_vertPosition;
   void main() {
     if (u_whichTexture == -3) {
       gl_FragColor = vec4((v_Normal + 1.0) / 2.0, 1.0);
@@ -50,6 +54,15 @@ var FSHADER_SOURCE = `
     else {
       gl_FragColor = vec4(1.0, 0.2, 0.2, 1.0);
     }
+
+    vec3 lightVector = vec3(v_vertPosition) - u_LightPosition;
+    float r = length(lightVector);
+    if (r < 0.0) {
+      gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+    }
+    else {
+      gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
+    }
   }`
 
 // constant vars
@@ -60,6 +73,7 @@ const CIRCLE = 2;
 // shader vars
 let a_Position;
 let a_UV;
+let a_Normal;
 let u_FragColor;
 let u_ModelMatrix;
 let u_GlobalRotateMatrix;
@@ -71,6 +85,8 @@ let u_Sampler2;
 let u_Sampler3;
 let u_Sampler4;
 let u_whichTexture;
+let u_LightPosition;
+
 
 // Global vars
 let gl;
@@ -88,6 +104,7 @@ var globalRotateM = new Matrix4();
 var g_Point_list = [];
 var g_camera;
 var g_normal_on = false;
+var g_light_position = [0, 1, -2];
 var g_map = [
   1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, //1
   1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, //2
@@ -267,6 +284,12 @@ function connect_vars_to_GLSL() {
       return;
     }
 
+    u_LightPosition = gl.getUniformLocation(gl.program, 'u_LightPosition');
+    if (!u_LightPosition) {
+      console.log('Failed to get the storage location of u_LightPosition');
+      return;
+    }
+
     var identityM = new Matrix4();
     gl.uniformMatrix4fv(u_ModelMatrix, false, identityM.elements);
 }
@@ -277,6 +300,24 @@ function html_actions() {
   document.getElementById('CameraAngle').addEventListener('mousemove', function() {
     g_angle = this.value;
     renderScene();
+  });
+  document.getElementById('Light X').addEventListener('mousemove', function(ev) {
+    if (ev.buttons == 1) {
+      g_light_position[0] = this.value / 100;
+      renderScene();
+    }
+  });
+  document.getElementById('Light Y').addEventListener('mousemove', function(ev) {
+    if (ev.buttons == 1) {
+      g_light_position[1] = this.value / 100;
+      renderScene();
+    }
+  });
+  document.getElementById('Light Z').addEventListener('mousemove', function(ev) {
+    if (ev.buttons == 1) {
+      g_light_position[2] = this.value / 100;
+      renderScene();
+    }
   });
 
   // buttons
@@ -436,6 +477,9 @@ function renderScene(timestamp) {
   gl.clear(gl.COLOR_BUFFER_BIT);
   gl.clear(gl.DEPTH_BUFFER_BIT);
 
+  gl.uniform3f(u_LightPosition, g_light_position[0], g_light_position[1], g_light_position[2]);
+
+
   drawOwl();
   drawFloorandSky();
   drawWalls();
@@ -464,8 +508,13 @@ function duration_performance(text, htmlID) {
 
 function tick(timestamp) {
   g_seconds = performance.now() / 1000 - g_start_time;
+  updateAnimations();
   renderScene(timestamp);
   requestAnimationFrame(tick);
+}
+
+function updateAnimations() {
+  g_light_position[0] = Math.cos(g_seconds);
 }
 
 function click(ev) {
