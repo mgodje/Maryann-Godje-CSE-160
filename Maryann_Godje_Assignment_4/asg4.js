@@ -31,6 +31,8 @@ var FSHADER_SOURCE = `
   uniform sampler2D u_Sampler4;
   uniform int u_whichTexture;
   uniform vec3 u_LightPosition;
+  uniform vec3 u_CameraPosition;
+  uniform bool u_lightOn;
   varying vec4 v_vertPosition;
   void main() {
     if (u_whichTexture == -3) {
@@ -55,14 +57,36 @@ var FSHADER_SOURCE = `
       gl_FragColor = vec4(1.0, 0.2, 0.2, 1.0);
     }
 
-    vec3 lightVector = vec3(v_vertPosition) - u_LightPosition;
+    // Spot Light
+    // https://webglfundamentals.org/webgl/lessons/webgl-3d-lighting-spot.html
+
+    // Lighting
+    vec3 lightVector = u_LightPosition - vec3(v_vertPosition);
     float r = length(lightVector);
-    if (r < 0.0) {
-      gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+
+    // N Dot L
+    vec3 L = normalize(lightVector);
+    vec3 N = normalize(v_Normal);
+    float nDotL = max(dot(N, L), 0.0);
+    gl_FragColor.a = 1.0;
+
+    // Reflection
+    vec3 R = reflect(-L, N);
+
+    // Eye Vector
+    vec3 E = normalize(u_CameraPosition - vec3(v_vertPosition));
+
+    // Specular
+    float specular = pow(max(dot(R, E), 0.0), 20.0) * 0.8;
+
+    // Diffuse and Ambient
+    vec3 diffuse = vec3(gl_FragColor) * nDotL * 0.7;
+    vec3 ambient = vec3(gl_FragColor) * 0.3;
+
+    if (u_lightOn) {
+      gl_FragColor = vec4(specular + diffuse + ambient, 1.0);
     }
-    else {
-      gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
-    }
+
   }`
 
 // constant vars
@@ -86,17 +110,18 @@ let u_Sampler3;
 let u_Sampler4;
 let u_whichTexture;
 let u_LightPosition;
-
+let u_CameraPosition;
+let u_lightOn;
 
 // Global vars
-let gl;
+let gl = 0;
 let canvas;
 let g_selected_color = [1.0, 1.0, 1.0, 1.0];
 let g_selected_size = 2.0;
 let g_selected_type = POINT;
 let g_selected_segments = 10;
-var g_seconds = 0;  
-var g_start_time;
+var g_seconds = [0, 0, 0];  
+var g_start_time = 0;
 var g_angle = 0;
 var viewMatrix = new Matrix4();
 var projectionMatrix = new Matrix4();
@@ -105,6 +130,7 @@ var g_Point_list = [];
 var g_camera;
 var g_normal_on = false;
 var g_light_position = [0, 1, -2];
+var g_light_on = false;
 var g_map = [
   1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, //1
   1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, //2
@@ -290,6 +316,18 @@ function connect_vars_to_GLSL() {
       return;
     }
 
+    u_CameraPosition = gl.getUniformLocation(gl.program, 'u_CameraPosition');
+    if (!u_CameraPosition) {
+      console.log('Failed to get the storage location of u_CameraPosition');
+      return;
+    }
+
+    u_lightOn = gl.getUniformLocation(gl.program, 'u_lightOn');
+    if (!u_lightOn) {
+      console.log('Failed to get the storage location of u_lightOn');
+      return;
+    }
+
     var identityM = new Matrix4();
     gl.uniformMatrix4fv(u_ModelMatrix, false, identityM.elements);
 }
@@ -299,36 +337,45 @@ function html_actions() {
   // sliders
   document.getElementById('CameraAngle').addEventListener('mousemove', function() {
     g_angle = this.value;
-    renderScene();
+    //renderScene();
   });
   document.getElementById('Light X').addEventListener('mousemove', function(ev) {
     if (ev.buttons == 1) {
-      g_light_position[0] = this.value / 100;
-      renderScene();
+      g_seconds[0] = Math.acos(this.value) * 1000;
+      //renderScene();
     }
   });
   document.getElementById('Light Y').addEventListener('mousemove', function(ev) {
     if (ev.buttons == 1) {
-      g_light_position[1] = this.value / 100;
-      renderScene();
+      g_seconds[1] = Math.asin(this.value) * 1000;
+      //renderScene();
     }
   });
   document.getElementById('Light Z').addEventListener('mousemove', function(ev) {
     if (ev.buttons == 1) {
-      g_light_position[2] = this.value / 100;
-      renderScene();
+      g_seconds[2] = Math.asin(this.value) * 1000;
+      //renderScene();
     }
   });
 
   // buttons
   document.getElementById('Normal On').onclick = function() {
     g_normal_on = true;
-    renderScene();
+    //renderScene();
   };
   document.getElementById('Normal Off').onclick = function() {
     g_normal_on = false;
-    renderScene();
+    //renderScene();
   };
+  document.getElementById('Light On').onclick = function() {
+    g_light_on = true;
+    //renderScene();
+  }
+  document.getElementById('Light Off').onclick = function() {
+    g_light_on = false;
+    //renderScene();
+  }
+
 }
 
 function xy_coordinate_covert_to_GL(ev) {
@@ -460,9 +507,11 @@ var g_up = [0, 1, 0];
 
 function renderScene(timestamp) {
 
+  if (gl == 0) {
+    return;
+  }
+
   // Tutor Jacob showed how to use setIdentity() - 05/07/2024
-  viewMatrix.setIdentity();
-  viewMatrix.setLookAt(g_eye[0], g_eye[1], g_eye[2], g_at[0], g_at[1], g_at[2], g_up[0], g_up[1], g_up[2]);
   gl.uniformMatrix4fv(u_ViewMatrix, false, g_camera.viewMatrix.elements);
 
   projectionMatrix.setIdentity();
@@ -479,6 +528,9 @@ function renderScene(timestamp) {
 
   gl.uniform3f(u_LightPosition, g_light_position[0], g_light_position[1], g_light_position[2]);
 
+  gl.uniform3f(u_CameraPosition, g_camera.eye.elements[0], g_camera.eye.elements[1], g_camera.eye.elements[2]);
+
+  gl.uniform1i(u_lightOn, g_light_on);
 
   drawOwl();
   drawFloorandSky();
@@ -507,14 +559,18 @@ function duration_performance(text, htmlID) {
 }
 
 function tick(timestamp) {
-  g_seconds = performance.now() / 1000 - g_start_time;
+  g_seconds[0] += timestamp - g_start_time;
+  g_seconds[1] += timestamp - g_start_time;
+  g_seconds[2] += timestamp - g_start_time;
   updateAnimations();
   renderScene(timestamp);
   requestAnimationFrame(tick);
 }
 
 function updateAnimations() {
-  g_light_position[0] = Math.cos(g_seconds);
+  g_light_position[0] = Math.cos(g_seconds[0] / 1000);
+  g_light_position[1] = Math.sin(g_seconds[1] / 1000) + 1;
+  g_light_position[2] = Math.sin(g_seconds[2] / 1000);
 }
 
 function click(ev) {
@@ -540,5 +596,4 @@ function click(ev) {
   // store new point
   g_Point_list.push(point);
 
-  renderScene();
 }

@@ -85,6 +85,10 @@ function draw_triangle_3d(vertices) {
 
 function draw_triangle_3dUV_Normal(vertices, uv, normals) {
 
+  if (g_normal_on) {
+    gl.uniform1i(u_whichTexture, -3);
+  }
+
   var n = 3; // The number of vertices
 
   // Create a buffer object
@@ -106,8 +110,6 @@ function draw_triangle_3dUV_Normal(vertices, uv, normals) {
   // Enable the assignment to a_Position variable
   gl.enableVertexAttribArray(a_Position);
 
-  gl.drawArrays(gl.TRIANGLES, 0, n);
-
   // Create a buffer object
   var uvBuffer = gl.createBuffer();
   if (!uvBuffer) {
@@ -126,8 +128,6 @@ function draw_triangle_3dUV_Normal(vertices, uv, normals) {
 
   // Enable the assignment to a_Position variable
   gl.enableVertexAttribArray(a_UV);
-
-  gl.drawArrays(gl.TRIANGLES, 0, n);
 
    // Create normal buffer
    var normalBuffer = gl.createBuffer();

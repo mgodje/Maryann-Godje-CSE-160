@@ -22,14 +22,24 @@ function drawFloorandSky(){
     sky.matrix.translate(0, 0, 0.6);
     sky.matrix.scale(-33, -33, -31);
     sky.render();
-}
+
     // Light cube
     var light = new Cube();
     light.color = [2.0, 2.0, 0.0, 1.0];
+    light.textureNum = -2;  
     light.matrix.translate(g_light_position[0], g_light_position[1], g_light_position[2]);
-    light.matrix.translate(-0.5, -0.5, -0.5);
     light.matrix.scale(0.1, 0.1, 0.1);
     light.render();
+
+    // Sphere
+    var sphere = new Sphere();
+    sphere.color = [0.0, 0.5, 0.0, 1.0]; 
+    sphere.textureNum = -2;  
+    sphere.matrix.translate(0.8, 0.0, 0.0); 
+    sphere.matrix.scale(0.4, 0.4, 0.4);
+    sphere.render();
+}
+
 
 function drawWalls() {
     for (var i = 0; i < 2; i++) {
