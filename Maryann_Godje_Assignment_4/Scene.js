@@ -28,7 +28,7 @@ function drawFloorandSky(){
     light.color = [2.0, 2.0, 0.0, 1.0];
     light.textureNum = -2;  
     light.matrix.translate(g_light_position[0], g_light_position[1], g_light_position[2]);
-    light.matrix.scale(0.1, 0.1, 0.1);
+    light.matrix.scale(0.04, 0.04, 0.04);
     light.render();
 
     // Sphere
@@ -38,6 +38,14 @@ function drawFloorandSky(){
     sphere.matrix.translate(0.8, 0.0, 0.0); 
     sphere.matrix.scale(0.4, 0.4, 0.4);
     sphere.render();
+
+    // Cube
+    var cube = new Cube();
+    cube.color = [0.5, 0.4, 0.9, 1.0]; 
+    cube.textureNum = -2;  
+    cube.matrix.translate(-0.8, 0.0, 0.0); 
+    cube.matrix.scale(0.3, 0.3, 0.3);
+    cube.render();
 }
 
 
