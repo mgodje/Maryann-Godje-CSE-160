@@ -35,7 +35,7 @@ function drawFloorandSky(){
     var sphere = new Sphere();
     sphere.color = [0.0, 0.5, 0.0, 1.0]; 
     sphere.textureNum = -2;  
-    sphere.matrix.translate(0.8, 0.0, 0.0); 
+    sphere.matrix.translate(0.8, 0.1, 0.0); 
     sphere.matrix.scale(0.4, 0.4, 0.4);
     sphere.render();
 
