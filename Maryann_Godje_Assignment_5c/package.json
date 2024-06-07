@@ -4,14 +4,17 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build"
+    "predeploy": "npx vite build",
+    "deploy": "gh-pages -d dist"
   },
   "devDependencies": {
-    "vite": "^4.5.0"
+    "gh-pages": "^6.1.1",
+    "vite": "^4.5.3"
   },
   "dependencies": {
     "lil-gui": "^0.19.2",
+    "save": "^2.9.0",
+    "save-dev": "^0.0.1-security",
     "three": "^0.158.0"
   }
 }
