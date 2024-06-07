@@ -2,9 +2,6 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import GUI from 'lil-gui'
 
-/**
- * Base
- */
 // Debug
 const gui = new GUI()
 
@@ -18,11 +15,10 @@ const scene = new THREE.Scene()
 const fog = new THREE.Fog('#262837', 1, 15)
 scene.fog = fog
 
-/**
- * Textures
- */
+// Textures
 const textureLoader = new THREE.TextureLoader()
 
+// Door textures
 const doorColorTexture = textureLoader.load('/textures/door/color.jpg') 
 doorColorTexture.colorSpace = THREE.SRGBColorSpace
 const doorAlphaTexture = textureLoader.load('/textures/door/alpha.jpg')
@@ -38,6 +34,7 @@ doorMetalnessTexture.colorSpace = THREE.SRGBColorSpace
 const doorRoughnessTexture = textureLoader.load('/textures/door/roughness.jpg')
 doorRoughnessTexture.colorSpace = THREE.SRGBColorSpace
 
+// Bricks textures
 const bricksColorTexture = textureLoader.load('/textures/bricks/color.jpg')
 bricksColorTexture.colorSpace = THREE.SRGBColorSpace
 const bricksAmbientOcclusionTexture = textureLoader.load('/textures/bricks/ambientOcclusion.jpg')
@@ -47,6 +44,7 @@ bricksNormalTexture.colorSpace = THREE.SRGBColorSpace
 const bricksRoughnessTexture = textureLoader.load('/textures/bricks/roughness.jpg')
 bricksRoughnessTexture.colorSpace = THREE.SRGBColorSpace
 
+// Grass textures
 const grassColorTexture = textureLoader.load('/textures/grass/color.jpg')
 grassColorTexture.colorSpace = THREE.SRGBColorSpace
 const grassAmbientOcclusionTexture = textureLoader.load('/textures/grass/ambientOcclusion.jpg')
@@ -56,20 +54,13 @@ grassNormalTexture.colorSpace = THREE.SRGBColorSpace
 const grassRoughnessTexture = textureLoader.load('/textures/grass/roughness.jpg')
 grassRoughnessTexture.colorSpace = THREE.SRGBColorSpace
 
-grassColorTexture.repeat.set(8, 8)
-grassAmbientOcclusionTexture.repeat.set(8, 8)
-grassNormalTexture.repeat.set(8, 8)
-grassRoughnessTexture.repeat.set(8, 8)
-
 grassColorTexture.wrapS = THREE.RepeatWrapping    
 grassAmbientOcclusionTexture.wrapT = THREE.RepeatWrapping
 grassNormalTexture.wrapS = THREE.RepeatWrapping
 grassRoughnessTexture.wrapT = THREE.RepeatWrapping
 
-/**
- * House
- */
-// Group
+
+// House
 const house = new THREE.Group() 
 scene.add(house)
 
