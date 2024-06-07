@@ -1,5 +1,7 @@
 import * as THREE from 'three'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
 import GUI from 'lil-gui'
 
 // Debug
@@ -14,6 +16,33 @@ const scene = new THREE.Scene()
 // Fog
 const fog = new THREE.Fog('#262837', 1, 15)
 scene.fog = fog
+
+// Font
+// https://dustinpfister.github.io/2023/07/05/threejs-text-geometry/
+// https://threejs.org/docs/#examples/en/geometries/TextGeometry
+
+const fontLoader = new FontLoader();
+
+fontLoader.load( 'node_modules/three/examples/fonts/helvetiker_bold.typeface.json', function ( font ) {
+	const text = new TextGeometry( 'Haunted House', {
+		font: font,
+		size: 100,
+		depth: 5,
+		curveSegments: 12,
+		bevelEnabled: true,
+		bevelThickness: 10,
+		bevelSize: 8,
+		bevelOffset: 0,
+		bevelSegments: 5
+	} );
+    const textMaterial = new THREE.MeshLambertMaterial({ color: '#E7FF0A' })
+    const textMesh = new THREE.Mesh(text, textMaterial)
+
+    text.center();
+    textMesh.scale.set(0.01, 0.01, 0.01);
+    textMesh.position.y = 4.5;
+    scene.add(textMesh);
+} );
 
 // Textures
 const textureLoader = new THREE.TextureLoader()
@@ -58,7 +87,6 @@ grassColorTexture.wrapS = THREE.RepeatWrapping
 grassAmbientOcclusionTexture.wrapT = THREE.RepeatWrapping
 grassNormalTexture.wrapS = THREE.RepeatWrapping
 grassRoughnessTexture.wrapT = THREE.RepeatWrapping
-
 
 // House
 const house = new THREE.Group() 
@@ -136,7 +164,7 @@ scene.add(graves)
 const graveGeometry = new THREE.BoxGeometry(0.6, 0.8, 0.2)
 const graveMaterial = new THREE.MeshStandardMaterial({ color: '#b2b6b1' })
 
-for (let i = 0; i < 50; i++) {
+for (let i = 0; i < 35; i++) {
     const angle = Math.random() * Math.PI * 2
     const radius = 3 + Math.random() * 6
     const x = Math.sin(angle) * radius
@@ -164,41 +192,37 @@ floor.rotation.x = - Math.PI * 0.5
 floor.position.y = 0
 scene.add(floor)
 
-/**
- * Lights
- */
+// Lights
+
 // Ambient light
-const ambientLight = new THREE.AmbientLight('#b9d5ff', 0.12)
+const ambientLight = new THREE.AmbientLight('#FFBABA', 0.12)
 gui.add(ambientLight, 'intensity').min(0).max(1).step(0.001)
 scene.add(ambientLight)
 
 // Directional light
-const moonLight = new THREE.DirectionalLight('#b9d5ff', 0.26)
+const moonLight = new THREE.DirectionalLight('#b9d5ff', 0.5)
 moonLight.position.set(4, 5, - 2)
-gui.add(moonLight, 'intensity').min(0).max(1).step(0.001)
-gui.add(moonLight.position, 'x').min(- 5).max(5).step(0.001)
-gui.add(moonLight.position, 'y').min(- 5).max(5).step(0.001)
-gui.add(moonLight.position, 'z').min(- 5).max(5).step(0.001)
+gui.add(moonLight.position, 'x').min(-5).max(5).step(0.001)
+gui.add(moonLight.position, 'y').min(-5).max(5).step(0.001)
+gui.add(moonLight.position, 'z').min(-5).max(5).step(0.001)
 scene.add(moonLight)
 
-// door light
-const doorLight = new THREE.PointLight('#ff7d46', 3, 7)
+// Door Light
+const doorLight = new THREE.PointLight('#F7440E', 3, 7)
 doorLight.position.set(0, 2.2, 2.7)
 house.add(doorLight)
 
-// Ghosts
-const ghost1 = new THREE.PointLight('#ff00ff', 6, 3)
-scene.add(ghost1)
+// Spooky Lighting
+const red_color = new THREE.PointLight('#FF0000', 6, 3)
+scene.add(red_color)
 
-const ghost2 = new THREE.PointLight('#00ffff', 6, 3)
-scene.add(ghost2)
+const orange_color = new THREE.PointLight('#FF8C00', 6, 3)
+scene.add(orange_color)
 
-const ghost3 = new THREE.PointLight('#ffff00', 6, 3)
-scene.add(ghost3)
+const gold_color = new THREE.PointLight('#C6A212', 6, 3)
+scene.add(gold_color)
 
-/**
- * Sizes
- */
+// Sizing
 const sizes = {
     width: window.innerWidth,
     height: window.innerHeight
@@ -219,23 +243,18 @@ window.addEventListener('resize', () =>
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 })
 
-/**
- * Camera
- */
 // Base camera
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
 camera.position.x = 4
 camera.position.y = 2
-camera.position.z = 5
+camera.position.z = 8
 scene.add(camera)
 
 // Controls
 const controls = new OrbitControls(camera, canvas)
 controls.enableDamping = true
 
-/**
- * Renderer
- */
+// Renderer 
 const renderer = new THREE.WebGLRenderer({
     canvas: canvas
 })
@@ -249,9 +268,6 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap
 
 moonLight.castShadow = true
 doorLight.castShadow = true
-ghost1.castShadow = true
-ghost2.castShadow = true
-ghost3.castShadow = true
 
 walls.castShadow = true
 bush1.castShadow = true
@@ -265,22 +281,7 @@ doorLight.shadow.mapSize.width = 256
 doorLight.shadow.mapSize.height = 256
 doorLight.shadow.camera.far = 7
 
-ghost1.shadow.mapSize.width = 256
-ghost1.shadow.mapSize.height = 256
-ghost1.shadow.camera.far = 7
-
-ghost2.shadow.mapSize.width = 256
-ghost2.shadow.mapSize.height = 256
-ghost2.shadow.camera.far = 7
-
-ghost3.shadow.mapSize.width = 256
-ghost3.shadow.mapSize.height = 256
-ghost3.shadow.camera.far = 7
-
-
-/**
- * Animate
- */
+// Animate
 const clock = new THREE.Clock()
 
 const tick = () =>
@@ -288,20 +289,20 @@ const tick = () =>
     const elapsedTime = clock.getElapsedTime()
 
     // Update ghosts
-    const ghost1Angle = elapsedTime * 0.5
-    ghost1.position.x = Math.cos(ghost1Angle) * 4
-    ghost1.position.z = Math.sin(ghost1Angle) * 4
-    ghost1.position.y = Math.sin(elapsedTime * 3)
+    const red_angle = elapsedTime * 0.5
+    red_color.position.x = Math.cos(red_angle) * 4
+    red_color.position.z = Math.sin(red_angle) * 4
+    red_color.position.y = Math.sin(elapsedTime * 3)
 
-    const ghost2Angle = - elapsedTime * 0.32
-    ghost2.position.x = Math.cos(ghost2Angle) * 5
-    ghost2.position.z = Math.sin(ghost2Angle) * 5
-    ghost2.position.y = Math.sin(elapsedTime * 4) + Math.sin(elapsedTime * 2.5) 
+    const orange_angle = - elapsedTime * 0.32
+    orange_color.position.x = Math.cos(orange_angle) * 5
+    orange_color.position.z = Math.sin(orange_angle) * 5
+    orange_color.position.y = Math.sin(elapsedTime * 4) + Math.sin(elapsedTime * 2.5) 
 
-    const ghost3Angle = - elapsedTime * 0.18
-    ghost3.position.x = Math.cos(ghost3Angle) * (7 * Math.sin(elapsedTime * 0.32))
-    ghost3.position.z = Math.sin(ghost3Angle) * (7 * Math.sin(elapsedTime * 0.5))
-    ghost3.position.y = Math.sin(elapsedTime * 3) + Math.sin(elapsedTime * 2)
+    const gold_angle = - elapsedTime * 0.18
+    gold_color.position.x = Math.cos(gold_angle) * (7 * Math.sin(elapsedTime * 0.32))
+    gold_color.position.z = Math.sin(gold_angle) * (7 * Math.sin(elapsedTime * 0.5))
+    gold_color.position.y = Math.sin(elapsedTime * 3) + Math.sin(elapsedTime * 2)
 
     // Update controls
     controls.update()
