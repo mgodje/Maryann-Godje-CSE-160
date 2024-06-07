@@ -1,10 +1,7 @@
 import * as THREE from "three";
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 import { MTLLoader } from 'three/addons/loaders/MTLLoader.js';
-// import GUI from 'lil-gui'
-
-// const gui = new GUI()
 
 function main() {
 	const canvas = document.querySelector( '#c' );
@@ -50,9 +47,6 @@ function main() {
 	// how to generate a cylinder: https://threejs.org/docs/#api/en/geometries/CylinderGeometry
 	const geometry_cylinder = new THREE.CylinderGeometry(cylinderTopRadius, cylinderBottomRadius, cylinderHeight, cylinderRadialSegments);
 
-	/* 
-		Lights
-	*/
 	// Directional Light
 	const color = 0xFFFFFF;
 	const intensity = 3;
@@ -113,17 +107,17 @@ function main() {
 		return obj_t;
 	}
 
-	/*function texturedHen( geometry, texture_hen, x ) {
-		const material = new THREE.MeshBasicMaterial( {
-			map: texture_hen
-		} );
-		const obj_t = new THREE.Mesh( geometry, material );
-		scene.add( obj_t );
+	// function texturedHen( geometry, texture_hen, x ) {
+	// 	const material = new THREE.MeshBasicMaterial( {
+	// 		map: texture_hen
+	// 	} );
+	// 	const obj_t = new THREE.Mesh( geometry, material );
+	// 	scene.add( obj_t );
 
-		obj_t.position.x = x;
+	// 	obj_t.position.x = x;
 
-		return obj_t;
-	}*/
+	// 	return obj_t;
+	// }
 
 	const shapes = [
 		texturedSheep( geometry_sphere, texture_sheep, - 2 ),				//1
