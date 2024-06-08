@@ -35,7 +35,7 @@ fontLoader.load( 'node_modules/three/examples/fonts/helvetiker_bold.typeface.jso
 		bevelOffset: 0,
 		bevelSegments: 5
 	} );
-    const textMaterial = new THREE.MeshLambertMaterial({ color: '#E7FF0A' })
+    const textMaterial = new THREE.MeshLambertMaterial({ color: '#FFFF00' })
     const textMesh = new THREE.Mesh(text, textMaterial)
 
     text.center();
@@ -108,7 +108,7 @@ house.add(walls)
 // Roof
 const roof = new THREE.Mesh(
     new THREE.ConeGeometry(3.5, 1, 4),
-    new THREE.MeshStandardMaterial({ color: '#b35f45' })
+    new THREE.MeshStandardMaterial({ color: '#353030' })
 )
 roof.position.y = 2.5 + 0.5
 roof.rotation.y = Math.PI * 0.25
@@ -157,6 +157,70 @@ bush4.scale.set(0.15, 0.15, 0.15)
 bush4.position.set(-1, 0.05, 2.6)
 house.add(bush4)
 
+// Ghosts
+const ghost1 = new THREE.Group() 
+scene.add(ghost1)
+const ghost2 = new THREE.Group()
+scene.add(ghost2)
+const ghost3 = new THREE.Group()
+scene.add(ghost3)
+
+// Bodies
+const ghostGeometry = new THREE.CapsuleGeometry(0.25, 0.25, 1, 16, 16)
+const ghostMaterial = new THREE.MeshStandardMaterial({ color: '#f8f8ff' })
+
+// Eyes
+const eyeGeometry = new THREE.CircleGeometry(1, 32)
+const eyeMaterial = new THREE.MeshStandardMaterial({ color: '#000000' })
+
+// Ghost 1
+const ghost1_body = new THREE.Mesh(ghostGeometry, ghostMaterial)
+ghost1_body.scale.set(1.75, 2, 1.5)
+ghost1_body.position.set(-3, 0.5, 1.5)
+ghost1.add(ghost1_body)
+
+const ghost1_eye1 = new THREE.Mesh(eyeGeometry, eyeMaterial)
+ghost1_eye1.scale.set(0.1, 0.1, 0.1)
+ghost1_eye1.position.set(-3.12, 0.9, 1.85)
+ghost1.add(ghost1_eye1)
+
+const ghost1_eye2 = new THREE.Mesh(eyeGeometry, eyeMaterial)
+ghost1_eye2.scale.set(0.1, 0.1, 0.1)
+ghost1_eye2.position.set(-2.88, 0.9, 1.85)
+ghost1.add(ghost1_eye2)
+
+// Ghost 2
+const ghost2_body = new THREE.Mesh(ghostGeometry, ghostMaterial)
+ghost2_body.scale.set(1.75, 2, 1.5)
+ghost2_body.position.set(3, 0.5, 1.5)
+ghost2.add(ghost2_body)
+
+const ghost2_eye1 = new THREE.Mesh(eyeGeometry, eyeMaterial)
+ghost2_eye1.scale.set(0.1, 0.1, 0.1)
+ghost2_eye1.position.set(3.12, 0.9, 1.85)
+ghost2.add(ghost2_eye1)
+
+const ghost2_eye2 = new THREE.Mesh(eyeGeometry, eyeMaterial)
+ghost2_eye2.scale.set(0.1, 0.1, 0.1)
+ghost2_eye2.position.set(2.88, 0.9, 1.85)
+ghost2.add(ghost2_eye2)
+
+// Ghost 3
+const ghost3_body = new THREE.Mesh(ghostGeometry, ghostMaterial)
+ghost3_body.scale.set(1.75, 2, 1.5)
+ghost3_body.position.set(0, 0.5, 6)
+ghost3.add(ghost3_body)
+
+const ghost3_eye1 = new THREE.Mesh(eyeGeometry, eyeMaterial)
+ghost3_eye1.scale.set(0.1, 0.1, 0.1)
+ghost3_eye1.position.set(0.12, 0.9, 6.35)
+ghost3.add(ghost3_eye1)
+
+const ghost3_eye2 = new THREE.Mesh(eyeGeometry, eyeMaterial)
+ghost3_eye2.scale.set(0.1, 0.1, 0.1)
+ghost3_eye2.position.set(-0.12, 0.9, 6.35)
+ghost3.add(ghost3_eye2)
+
 // Graves
 const graves = new THREE.Group()
 scene.add(graves)
@@ -180,7 +244,7 @@ for (let i = 0; i < 35; i++) {
 
 // Floor
 const floor = new THREE.Mesh(
-    new THREE.PlaneGeometry(20, 20),
+    new THREE.PlaneGeometry(30, 30),
     new THREE.MeshStandardMaterial({
         map: grassColorTexture,
         aoMap: grassAmbientOcclusionTexture,
@@ -211,6 +275,15 @@ scene.add(moonLight)
 const doorLight = new THREE.PointLight('#F7440E', 3, 7)
 doorLight.position.set(0, 2.2, 2.7)
 house.add(doorLight)
+
+// Bush Lights
+const bushLight1 = new THREE.PointLight('#89c854', 2, 3)
+bushLight1.position.set(0.8, 0.2, 2.2)
+house.add(bushLight1)
+
+const bushLight2 = new THREE.PointLight('#89c854', 1, 3)
+bushLight2.position.set(-0.8, 0.1, 2.2)
+house.add(bushLight2)
 
 // Spooky Lighting
 const red_color = new THREE.PointLight('#FF0000', 6, 3)
@@ -303,6 +376,21 @@ const tick = () =>
     gold_color.position.x = Math.cos(gold_angle) * (7 * Math.sin(elapsedTime * 0.32))
     gold_color.position.z = Math.sin(gold_angle) * (7 * Math.sin(elapsedTime * 0.5))
     gold_color.position.y = Math.sin(elapsedTime * 3) + Math.sin(elapsedTime * 2)
+
+    const ghost1_angle = elapsedTime * 0.5
+    ghost1.position.x = Math.cos(ghost1_angle) * 4
+    ghost1.position.z = Math.sin(ghost1_angle) * 4
+    ghost1.position.y = Math.sin(elapsedTime * 3)
+
+    const ghost2_angle = - elapsedTime * 0.25
+    ghost2.position.x = Math.cos(ghost2_angle) * (7 * Math.sin(elapsedTime * 0.32))
+    ghost2.position.z = Math.sin(ghost2_angle) * (7 * Math.sin(elapsedTime * 0.5))
+    ghost2.position.y = Math.sin(elapsedTime * 2) + Math.sin(elapsedTime * 3)
+
+    const ghost3_angle = - elapsedTime * 0.1
+    ghost3.position.x = Math.cos(ghost3_angle) * (7 * Math.sin(elapsedTime * 0.32))
+    ghost3.position.z = Math.sin(ghost3_angle) * (7 * Math.sin(elapsedTime * 0.5))
+    ghost3.position.y = Math.sin(elapsedTime * 3) + Math.sin(elapsedTime * 2)
 
     // Update controls
     controls.update()
