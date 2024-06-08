@@ -48,39 +48,39 @@ fontLoader.load( 'node_modules/three/examples/fonts/helvetiker_bold.typeface.jso
 const textureLoader = new THREE.TextureLoader()
 
 // Door textures
-const doorColorTexture = textureLoader.load('/textures/door/color.jpg') 
+const doorColorTexture = textureLoader.load('./textures/door/color.jpg') 
 doorColorTexture.colorSpace = THREE.SRGBColorSpace
-const doorAlphaTexture = textureLoader.load('/textures/door/alpha.jpg')
+const doorAlphaTexture = textureLoader.load('./textures/door/alpha.jpg')
 doorAlphaTexture.colorSpace = THREE.SRGBColorSpace
-const doorAmbientOcclusionTexture = textureLoader.load('/textures/door/ambientOcclusion.jpg')
+const doorAmbientOcclusionTexture = textureLoader.load('./textures/door/ambientOcclusion.jpg')
 doorAmbientOcclusionTexture.colorSpace = THREE.SRGBColorSpace
-const doorHeightTexture = textureLoader.load('/textures/door/height.jpg')
+const doorHeightTexture = textureLoader.load('./textures/door/height.jpg')
 doorHeightTexture.colorSpace = THREE.SRGBColorSpace
-const doorNormalTexture = textureLoader.load('/textures/door/normal.jpg')
+const doorNormalTexture = textureLoader.load('./textures/door/normal.jpg')
 doorNormalTexture.colorSpace = THREE.SRGBColorSpace
-const doorMetalnessTexture = textureLoader.load('/textures/door/metalness.jpg')
+const doorMetalnessTexture = textureLoader.load('./textures/door/metalness.jpg')
 doorMetalnessTexture.colorSpace = THREE.SRGBColorSpace
-const doorRoughnessTexture = textureLoader.load('/textures/door/roughness.jpg')
+const doorRoughnessTexture = textureLoader.load('./textures/door/roughness.jpg')
 doorRoughnessTexture.colorSpace = THREE.SRGBColorSpace
 
 // Bricks textures
-const bricksColorTexture = textureLoader.load('/textures/bricks/color.jpg')
+const bricksColorTexture = textureLoader.load('./textures/bricks/color.jpg')
 bricksColorTexture.colorSpace = THREE.SRGBColorSpace
-const bricksAmbientOcclusionTexture = textureLoader.load('/textures/bricks/ambientOcclusion.jpg')
+const bricksAmbientOcclusionTexture = textureLoader.load('./textures/bricks/ambientOcclusion.jpg')
 bricksAmbientOcclusionTexture.colorSpace = THREE.SRGBColorSpace
-const bricksNormalTexture = textureLoader.load('/textures/bricks/normal.jpg')
+const bricksNormalTexture = textureLoader.load('./textures/bricks/normal.jpg')
 bricksNormalTexture.colorSpace = THREE.SRGBColorSpace
-const bricksRoughnessTexture = textureLoader.load('/textures/bricks/roughness.jpg')
+const bricksRoughnessTexture = textureLoader.load('./textures/bricks/roughness.jpg')
 bricksRoughnessTexture.colorSpace = THREE.SRGBColorSpace
 
 // Grass textures
-const grassColorTexture = textureLoader.load('/textures/grass/color.jpg')
+const grassColorTexture = textureLoader.load('./textures/grass/color.jpg')
 grassColorTexture.colorSpace = THREE.SRGBColorSpace
-const grassAmbientOcclusionTexture = textureLoader.load('/textures/grass/ambientOcclusion.jpg')
+const grassAmbientOcclusionTexture = textureLoader.load('./textures/grass/ambientOcclusion.jpg')
 grassAmbientOcclusionTexture.colorSpace = THREE.SRGBColorSpace
-const grassNormalTexture = textureLoader.load('/textures/grass/normal.jpg')
+const grassNormalTexture = textureLoader.load('./textures/grass/normal.jpg')
 grassNormalTexture.colorSpace = THREE.SRGBColorSpace
-const grassRoughnessTexture = textureLoader.load('/textures/grass/roughness.jpg')
+const grassRoughnessTexture = textureLoader.load('./textures/grass/roughness.jpg')
 grassRoughnessTexture.colorSpace = THREE.SRGBColorSpace
 
 grassColorTexture.wrapS = THREE.RepeatWrapping    
@@ -166,12 +166,14 @@ const ghost3 = new THREE.Group()
 scene.add(ghost3)
 
 // Bodies
+// https://threejs.org/docs/#api/en/geometries/CapsuleGeometry
 const ghostGeometry = new THREE.CapsuleGeometry(0.25, 0.25, 1, 16, 16)
-const ghostMaterial = new THREE.MeshStandardMaterial({ color: '#f8f8ff' })
+const ghostMaterial = new THREE.MeshStandardMaterial({ color: '#f8f8ff', transparent: true, opacity: 0.5 })
 
 // Eyes
+// https://threejs.org/docs/#api/en/geometries/CircleGeometry
 const eyeGeometry = new THREE.CircleGeometry(1, 32)
-const eyeMaterial = new THREE.MeshStandardMaterial({ color: '#000000' })
+const eyeMaterial = new THREE.MeshStandardMaterial({ color: '#000000', transparent: true, opacity: 0.25 })
 
 // Ghost 1
 const ghost1_body = new THREE.Mesh(ghostGeometry, ghostMaterial)
@@ -284,6 +286,19 @@ house.add(bushLight1)
 const bushLight2 = new THREE.PointLight('#89c854', 1, 3)
 bushLight2.position.set(-0.8, 0.1, 2.2)
 house.add(bushLight2)
+
+// Text Lights
+const textLight1 = new THREE.PointLight('#FFFFFF', 3, 7)
+textLight1.position.set(0, 4.5, 0.2)
+scene.add(textLight1)
+
+const textLight2 = new THREE.PointLight('#FFFFFF', 3, 7)
+textLight2.position.set(3, 4.5, 0.2)
+scene.add(textLight2)
+
+const textLight3 = new THREE.PointLight('#FFFFFF', 3, 7)
+textLight3.position.set(-3.25, 4.5, 0.2)
+scene.add(textLight3)
 
 // Spooky Lighting
 const red_color = new THREE.PointLight('#FF0000', 6, 3)
